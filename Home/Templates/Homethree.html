@@ -1,0 +1,297 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Assistant Features</title>
+  <style>
+    @property --angle {
+      syntax: '<angle>';
+      initial-value: 0deg;
+      inherits: false;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #0a0a0a;
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .home-three {
+      display: flex;
+      min-height: 100vh;
+      padding: 60px 80px;
+      gap: 60px;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
+    }
+
+    .tool-list {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      perspective: 1000px;
+    }
+
+    .tool-item {
+      position: relative;
+      font-size: 2rem;
+      color: #777;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .tool-item span {
+      position: relative;
+      display: inline-block;
+      padding: 10px 20px;
+      z-index: 1;
+    }
+
+    .tool-item.animate {
+      color: #00e5e5;
+      text-shadow: 0 0 8px #00e5e5, 0 0 15px #00e5e5;
+    }
+
+    .tool-item.animate::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, #00e5e5, transparent);
+      animation: glow-slide 1s forwards;
+    }
+
+    .tool-display {
+      flex: 1;
+      position: relative;
+      background: rgba(26, 26, 26, 0.95);
+      padding: 50px;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(0, 229, 229, 0.2);
+      max-width: 900px;
+      height: 520px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+    }
+
+    .tool-display::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 18px;
+      padding: 2px;
+      background: conic-gradient(
+        from var(--angle),
+        #00e5e5,
+        #0099ff,
+        #00e5e5
+      );
+      -webkit-mask: 
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      animation: rotate-gradient 4s linear infinite;
+    }
+
+    .animated-text {
+      font-size: 3rem;
+      margin-bottom: 30px;
+      position: relative;
+      animation: fade-in-up 0.8s ease;
+    }
+
+    .underline {
+      height: 4px;
+      width: 0;
+      background: #00e5e5;
+      position: absolute;
+      left: 0;
+      bottom: -10px;
+      animation: line-expand 1.2s ease forwards;
+      box-shadow: 0 0 8px #00e5e5, 0 0 15px #00e5e5;
+    }
+
+    .tool-description {
+      font-size: 1.3rem;
+      text-align: center;
+      background: rgba(34, 34, 34, 0.8);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0, 229, 229, 0.3);
+      max-width: 650px;
+      animation: fade-in 0.8s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    @keyframes glow-slide {
+      0% { transform: translateX(-100%); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateX(100%); opacity: 0; }
+    }
+
+    @keyframes rotate-gradient {
+      to { --angle: 360deg; }
+    }
+
+    @keyframes fade-in-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes line-expand {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    @media (max-width: 768px) {
+      .home-three {
+        flex-direction: column;
+        padding: 30px;
+        gap: 40px;
+      }
+
+      .tool-display {
+        height: auto;
+        padding: 30px;
+        max-width: 100%;
+      }
+
+      .animated-text {
+        font-size: 2rem;
+      }
+
+      .tool-item {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="home-three">
+    <div class="tool-list">
+      <div class="tool-item" onclick="activateTool(0)"><span>Code Generator</span></div>
+      <div class="tool-item" onclick="activateTool(1)"><span>Study Assistance</span></div>
+      <div class="tool-item" onclick="activateTool(2)"><span>Mindful Journaling</span></div>
+      <div class="tool-item" onclick="activateTool(3)"><span>🌍 Ask Anything</span></div>
+    </div>
+
+    <div class="tool-display">
+      <div class="animated-text" id="animatedText">
+        Code Generator
+        <div class="underline"></div>
+      </div>
+      <div class="tool-description" id="toolComponent">
+        💻 Generate custom code snippets instantly!
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tools = [
+      {
+        title: "Code Generator",
+        content: "{% url 'Home:Animationone' %}"
+      },
+      {
+        title: "Study Assistance",
+        content: "{% url 'Home:Animationtwo' %}"
+      },
+      {
+        title: "Mindful Journaling",
+        content: "{% url 'Home:Animationthree' %}"
+      },
+      {
+        title: "🌍 Ask Anything",
+        content: "{% url 'Home:Animationfour' %}"
+      }
+    ];
+
+    let currentIndex = 0;
+    const textEl = document.getElementById("animatedText");
+    const contentEl = document.getElementById("toolComponent");
+    const toolItems = document.querySelectorAll(".tool-item");
+    let rotationInterval;
+
+    function activateTool(index) {
+      // Clear the auto-rotation interval
+      clearInterval(rotationInterval);
+      
+      // Remove animation from current item
+      toolItems[currentIndex].classList.remove("animate");
+      
+      currentIndex = index;
+      updateUI();
+      
+      // Restart auto-rotation after manual selection
+      startAutoRotation();
+    }
+
+    function updateUI() {
+      // Update the title and content
+      textEl.innerHTML = `${tools[currentIndex].title}<div class="underline"></div>`;
+      contentEl.textContent = tools[currentIndex].content;
+
+      // Remove animation from all items
+      toolItems.forEach(el => el.classList.remove("animate"));
+      
+      // Add animation to current item
+      toolItems[currentIndex].classList.add("animate");
+    }
+
+    function autoRotate() {
+      // Remove animation from current item
+      toolItems[currentIndex].classList.remove("animate");
+      
+      // Update to next index
+      currentIndex = (currentIndex + 1) % tools.length;
+      
+      // Update UI with new index
+      updateUI();
+    }
+
+    function startAutoRotation() {
+      // Clear any existing interval
+      if (rotationInterval) {
+        clearInterval(rotationInterval);
+      }
+      // Start new rotation interval
+      rotationInterval = setInterval(autoRotate, 4000);
+    }
+
+    // Initialize the first item and start rotation
+    updateUI();
+    startAutoRotation();
+
+    // Pause rotation on hover
+    toolItems.forEach(item => {
+      item.addEventListener('mouseenter', () => {
+        clearInterval(rotationInterval);
+      });
+      
+      item.addEventListener('mouseleave', () => {
+        startAutoRotation();
+      });
+    });
+  </script>
+</body>
+</html>

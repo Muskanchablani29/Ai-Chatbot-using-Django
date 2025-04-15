@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ask Anything Animation</title>
+  <style>
+    :root {
+      --background-dark: #000000;
+      --chat-background: #0a0a0a;
+      --user-message: #000000;
+      --ai-message: #000000;
+      --text-color: #ffffff;
+      --input-background: #111111;
+      --glow-blue: #00a2ff;
+      --glow-intensity: 0 0 10px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .Animation-four {
+      background: var(--background-dark);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    .chatbox {
+      width: min(1000px, 90vw);
+      height: min(600px, 80vh);
+      background: var(--chat-background);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(0, 162, 255, 0.2);
+      color: var(--text-color);
+      position: relative;
+      border: 1px solid rgba(0, 162, 255, 0.1);
+    }
+
+    .message {
+      display: flex;
+      margin: 20px 0;
+      align-items: flex-start;
+      gap: 12px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    .user {
+      flex-direction: row-reverse;
+      margin-left: auto;
+    }
+
+    .ai {
+      flex-direction: row;
+      margin-right: auto;
+    }
+
+    .user .bubble {
+      background: var(--user-message);
+      border: 1px solid var(--glow-blue);
+      box-shadow: var(--glow-intensity) var(--glow-blue);
+      border-radius: 15px 15px 0 15px;
+    }
+
+    .ai .bubble {
+      background: var(--ai-message);
+      border: 1px solid var(--glow-blue);
+      box-shadow: var(--glow-intensity) var(--glow-blue);
+      border-radius: 15px 15px 15px 0;
+    }
+
+    .bubble {
+      padding: 12px 18px;
+      max-width: 60%;
+      word-wrap: break-word;
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    .avatar {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--glow-blue);
+      box-shadow: var(--glow-intensity) var(--glow-blue);
+    }
+
+    .input-area {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      display: flex;
+      gap: 15px;
+      background: var(--input-background);
+      padding: 15px;
+      border-radius: 12px;
+      border: 1px solid var(--glow-blue);
+      box-shadow: var(--glow-intensity) var(--glow-blue);
+    }
+
+    .input-area input {
+      flex: 1;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.5);
+      color: var(--text-color);
+      border: 1px solid rgba(0, 162, 255, 0.2);
+      border-radius: 8px;
+      font-size: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .input-area input:focus {
+      outline: none;
+      border-color: var(--glow-blue);
+      box-shadow: 0 0 5px var(--glow-blue);
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+    }
+
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+
+    @media (max-width: 768px) {
+      .bubble {
+        max-width: 75%;
+      }
+      
+      .avatar {
+        width: 35px;
+        height: 35px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="Animation-four">
+    <div class="chatbox" id="chatbox">
+      <div class="input-area">
+        <input type="text" id="messageInput" placeholder="Ask me anything..." disabled />
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const chatbox = document.getElementById('chatbox');
+    const messageInput = document.getElementById('messageInput');
+    const messageTemplate = document.createElement('div');
+    messageTemplate.className = 'message';
+
+    const MAX_MESSAGES = 4;
+
+    const questions = [
+      "Tell me about AI technology",
+      "How do neural networks work?",
+      "What is machine learning?",
+      "Explain cloud computing",
+      "What is deep learning?",
+      "How does blockchain work?",
+      "What is quantum computing?",
+      "Explain IoT technology",
+      "What is edge computing?",
+      "How does cybersecurity work?"
+    ];
+
+    const answersMap = new Map([
+      ["Tell me about AI technology", "Artificial Intelligence is a branch of computer science that aims to create intelligent machines that can perform tasks that typically require human intelligence."],
+      ["How do neural networks work?", "Neural networks are computing systems inspired by biological neural networks, using interconnected nodes in layers to process and learn from data patterns."],
+      ["What is machine learning?", "Machine learning is a subset of AI that enables systems to learn and improve from experience without being explicitly programmed."],
+      ["Explain cloud computing", "Cloud computing is the delivery of computing services over the internet, including storage, processing power, and applications."],
+      ["What is deep learning?", "Deep learning is a subset of machine learning using multiple layers of neural networks to analyze various factors of data."],
+      ["How does blockchain work?", "Blockchain is a distributed ledger technology that records transactions across multiple computers securely and transparently."],
+      ["What is quantum computing?", "Quantum computing uses quantum mechanics principles to process information, potentially solving complex problems much faster than classical computers."],
+      ["Explain IoT technology", "Internet of Things (IoT) connects everyday devices to the internet, allowing them to send and receive data for smart functionality."],
+      ["What is edge computing?", "Edge computing processes data near the source of data generation instead of sending it to centralized data centers."],
+      ["How does cybersecurity work?", "Cybersecurity involves protecting systems, networks, and programs from digital attacks, unauthorized access, and data breaches."]
+    ]);
+
+    const avatars = {
+      user: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+      ai: 'https://cdn-icons-png.flaticon.com/512/4712/4712100.png'
+    };
+
+    let current = 0;
+    let isTyping = false;
+
+    function simulateTyping(text) {
+      return new Promise((resolve) => {
+        messageInput.value = '';
+        let index = 0;
+        
+        const typeChar = () => {
+          if (index < text.length) {
+            messageInput.value += text[index];
+            index++;
+            setTimeout(typeChar, 30);
+          } else {
+            setTimeout(resolve, 300);
+          }
+        };
+        
+        typeChar();
+      });
+    }
+
+    function addMessage(content, sender) {
+      const msg = messageTemplate.cloneNode(true);
+      msg.classList.add(sender);
+
+      const avatar = document.createElement('img');
+      avatar.className = 'avatar';
+      avatar.src = avatars[sender];
+      avatar.alt = `${sender} avatar`;
+
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+
+      msg.appendChild(avatar);
+      msg.appendChild(bubble);
+
+      if (chatbox.getElementsByClassName('message').length >= MAX_MESSAGES) {
+        const oldestMessage = chatbox.getElementsByClassName('message')[0];
+        oldestMessage.style.animation = 'fadeOut 0.5s ease-out forwards';
+        setTimeout(() => {
+          oldestMessage.remove();
+          chatbox.appendChild(msg);
+          msg.style.animation = 'fadeIn 0.5s ease-out forwards';
+        }, 500);
+      } else {
+        chatbox.appendChild(msg);
+        msg.style.animation = 'fadeIn 0.5s ease-out forwards';
+      }
+
+      if (sender === 'ai') {
+        typeText(bubble, content);
+      } else {
+        bubble.textContent = content;
+      }
+    }
+
+    function typeText(element, text, index = 0) {
+      if (index >= text.length) {
+        isTyping = false;
+        return;
+      }
+
+      isTyping = true;
+      element.textContent += text[index];
+      
+      setTimeout(() => typeText(element, text, index + 1), 30);
+    }
+
+    async function runConversation() {
+      if (current >= questions.length) return;
+
+      const question = questions[current];
+      const answer = answersMap.get(question);
+
+      await new Promise(resolve => setTimeout(resolve, 500));
+      await simulateTyping(question);
+      addMessage(question, 'user');
+
+      messageInput.value = '';
+      await new Promise(resolve => setTimeout(resolve, 500));
+      addMessage(answer, 'ai');
+
+      current++;
+      
+      if (!isTyping) {
+        setTimeout(runConversation, 1000);
+      } else {
+        const checkTyping = setInterval(() => {
+          if (!isTyping) {
+            clearInterval(checkTyping);
+            setTimeout(runConversation, 1000);
+          }
+        }, 100);
+      }
+    }
+
+    window.addEventListener('load', runConversation);
+  </script>
+</body>
+</html>

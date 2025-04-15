@@ -1,0 +1,335 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Chatbot Homepage</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .home-one {
+      background-color: #000;
+      color: #fff;
+      padding-top: 50px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      height: 100vh;
+    }
+
+    /* Left Side (Text and Buttons) */
+    .left {
+      width: 45%;
+      z-index: 10;
+      padding-left: 70px;   
+    }
+
+    .left h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+
+    .left p {
+      font-size: 1.3rem;
+      color: #bbb;
+      margin-bottom: 40px;
+      max-width: 500px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 20px;
+    }
+
+    .buttons button {
+      padding: 14px 30px;
+      border: none;
+      border-radius: 30px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .start-btn {
+      background-color: #0ff;
+      color: #000;
+      font-weight: bold;
+      box-shadow: 0 0 20px #0ff, 0 0 40px rgba(0, 255, 255, 0.4);
+    }
+
+    .start-btn:hover {
+      background-color: #00e5e5;
+      box-shadow: 0 0 25px #00e5e5;
+    }
+
+    .explore-btn {
+      background-color: transparent;
+      border: 1px solid #555;
+      color: #ccc;
+      box-shadow: 0 0 10px #555;
+    }
+
+    .explore-btn:hover {
+      background-color: #111;
+      box-shadow: 0 0 20px #888;
+    }
+
+    /* Right Side (Robot + Messages + Rings) */
+    .right {
+      position: relative;
+      width: 55%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .robot-img {
+      width: 420px;
+      padding-bottom: 50px;
+      z-index: 2;
+      filter: drop-shadow(0 0 15px cyan);
+    }
+
+    .message-container {
+      position: absolute;
+      z-index: 3;
+      right: 57%;
+      top: 50%;
+      perspective: 1000px;
+    }
+
+    .message-box {
+      position: absolute;
+      min-width: 200px;
+      transform-origin: left center;
+    }
+
+    .message-content {
+      background: rgba(0, 255, 255, 0.3);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 15px;
+      padding: 12px 20px;
+      color: #fff;
+      font-size: 0.9rem;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+      backdrop-filter: blur(5px);
+      animation: messageFlow 4s infinite;
+      position: relative;
+      margin-left: 15px;
+      min-height: 20px;
+    }
+
+    .message-content::before {
+      content: '';
+      position: absolute;
+      left: -10px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-right: 10px solid rgba(0, 255, 255, 0.3);
+    }
+
+    /* Typing animation dots */
+    .typing-dots::after {
+      content: '';
+      animation: typing 1.5s infinite;
+    }
+
+    @keyframes typing {
+      0% { content: ''; }
+      25% { content: '.'; }
+      50% { content: '..'; }
+      75% { content: '...'; }
+      100% { content: ''; }
+    }
+
+    @keyframes messageFlow {
+      0% {
+        opacity: 0;
+        transform: translateX(-30px) scale(0.8);
+      }
+      15% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+      }
+      85% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateX(30px) scale(0.8);
+      }
+    }
+
+    .ring {
+      position: absolute;
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: rotate 80s linear infinite;
+      box-shadow: 0 0 25px rgba(0,255,255,0.3), 0 0 40px rgba(0,255,255,0.15);
+    }
+
+    .ring:nth-child(2) {
+      width: 250px;
+      height: 250px;
+      animation-duration: 100s;
+    }
+
+    .ring:nth-child(3) {
+      width: 350px;
+      height: 350px;
+      animation-direction: reverse;
+      animation-duration: 120s;
+    }
+
+    .ring:nth-child(4) {
+      width: 450px;
+      height: 450px;
+      animation-duration: 140s;
+    }
+
+    .ring:nth-child(5) {
+      width: 550px;
+      height: 550px;
+      animation-direction: reverse;
+      animation-duration: 160s;
+    }
+
+    .ring i {
+      font-size: 1.5rem;
+      color: #fff;
+      text-shadow: 0 0 15px cyan, 0 0 30px #0ff;
+      position: absolute;
+    }
+
+    /* Icon Placement on Rings */
+    .ring i:nth-child(1) { top: 0; left: 50%; transform: translate(-50%, -50%); }
+    .ring i:nth-child(2) { top: 50%; right: 0; transform: translate(50%, -50%); }
+    .ring i:nth-child(3) { bottom: 0; left: 50%; transform: translate(-50%, 50%); }
+    .ring i:nth-child(4) { top: 50%; left: 0; transform: translate(-50%, -50%); }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="home-one">
+    <div class="container">
+      <!-- Left Section -->
+      <div class="left">
+        <h1>Welcome to AI Chatbot</h1>
+        <p>Experience the future of conversations with our intelligent assistant that understands and grows with you.</p>
+        <div class="buttons">
+          <button class="start-btn">Start Chatting</button>
+          <button class="explore-btn">Explore Features</button>
+        </div>
+      </div>
+
+      <!-- Right Section -->
+      <div class="right">
+        <img src="{% static 'images/Robot.png' %}" alt="Robot" class="robot-img" />
+        
+        <!-- Message Boxes -->
+        <div class="message-container">
+          <div class="message-box">
+            <div class="message-content"></div>
+          </div>
+        </div>
+
+        <!-- First Ring -->
+        <div class="ring">
+          <i class="fab fa-google"></i>
+          <i class="fab fa-whatsapp"></i>
+          <i class="fab fa-slack"></i>
+          <i class="fab fa-facebook-messenger"></i>
+        </div>
+
+        <!-- Second Ring -->
+        <div class="ring">
+          <i class="fab fa-discord"></i>
+          <i class="fab fa-github"></i>
+          <i class="fab fa-skype"></i>
+          <i class="fab fa-telegram-plane"></i>
+        </div>
+
+        <!-- Third Ring -->
+        <div class="ring">
+          <i class="fab fa-chrome"></i>
+          <i class="fab fa-android"></i>
+          <i class="fab fa-apple"></i>
+          <i class="fab fa-microsoft"></i>
+        </div>
+
+        <!-- Fourth Ring -->
+        <div class="ring">
+          <i class="fab fa-python"></i>
+          <i class="fab fa-java"></i>
+          <i class="fab fa-js"></i>
+          <i class="fab fa-react"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const messages = [
+      "Hello! How can I help you?",
+      "I'm your AI assistant!",
+      "Let's chat!",
+      "I can answer your questions.",
+      "Feel free to ask anything!"
+    ];
+
+    const messageContent = document.querySelector('.message-content');
+    let currentIndex = 0;
+
+    function typeMessage(text) {
+      messageContent.textContent = '';
+      messageContent.classList.add('typing-dots');
+      
+      setTimeout(() => {
+        messageContent.classList.remove('typing-dots');
+        let index = 0;
+        
+        function type() {
+          if (index < text.length) {
+            messageContent.textContent += text[index];
+            index++;
+            setTimeout(type, 50); // Adjust typing speed here
+          }
+        }
+        
+        type();
+      }, 2000); // Show typing dots for 1 second
+    }
+
+    function updateMessage() {
+      messageContent.style.animation = 'none';
+      messageContent.offsetHeight; // Trigger reflow
+      messageContent.style.animation = 'messageFlow 4s infinite';
+      typeMessage(messages[currentIndex]);
+      currentIndex = (currentIndex + 1) % messages.length;
+    }
+
+    // Initial message
+    updateMessage();
+
+    // Update message every 5 seconds
+    setInterval(updateMessage, 7000);
+  </script>
+</body>
+</html>

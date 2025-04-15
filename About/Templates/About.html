@@ -1,0 +1,335 @@
+{% load static %}
+{% include "index.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - AI Chatbot</title>
+
+    <!-- Lottie Animation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    
+    <style>
+        :root {
+            --color-primary: #00ffff;
+            --color-secondary: #ff00ff;
+            --color-background: #000000;
+            --color-text: #ffffff;
+            --glow-effect: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--color-background);
+            color: var(--color-text);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            margin-top: 80px;
+            min-height: 100vh;
+        }
+
+        /* Robot Animation Container */
+        #robot-container {
+            position: fixed;
+            left: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 400px;
+            height: 400px;
+            z-index: 10;
+            pointer-events: none;
+            filter: drop-shadow(0 0 15px var(--color-primary));
+            transition: all 0.6s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+        }
+
+        /* Robot Jump Animation Classes */
+        #robot-container.jump {
+            animation: jumpTransition 0.8s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+        }
+
+        #robot-container.jump-reverse {
+            animation: jumpTransitionReverse 0.8s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+        }
+
+        @keyframes jumpTransition {
+            0% { transform: translateY(-50%) scale(1); }
+            50% { transform: translateY(-150%) scale(1.2); }
+            100% { transform: translateY(-50%) scale(1); }
+        }
+
+        @keyframes jumpTransitionReverse {
+            0% { transform: translateY(-50%) scaleX(-1) scale(1); }
+            50% { transform: translateY(-150%) scaleX(-1) scale(1.2); }
+            100% { transform: translateY(-50%) scaleX(-1) scale(1); }
+        }
+
+        /* Section Styles */
+        .section {
+            min-height: 100vh;
+            padding: 4rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background-color: var(--color-background);
+            z-index: 1;
+        }
+
+        .content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid rgba(0, 255, 255, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .content.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section:first-child .content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            color: var(--color-primary);
+            margin-bottom: 2rem;
+            text-shadow: var(--glow-effect);
+            text-align: center;
+        }
+
+        h2 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            color: var(--color-secondary);
+            margin: 1.5rem 0;
+            text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+        }
+
+        p {
+            font-size: clamp(1.1rem, 2vw, 1.3rem);
+            color: #e0e0e0;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+
+        .feature-list li {
+            font-size: clamp(1rem, 1.8vw, 1.2rem);
+            color: #cccccc;
+            margin: 1rem 0;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .feature-list li::before {
+            content: '→';
+            color: var(--color-primary);
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Section-specific content positioning */
+        .section:nth-child(1) .content { margin-left: 35%; }
+        .section:nth-child(2) .content { margin-right: 35%; }
+        .section:nth-child(3) .content { margin-left: 35%; }
+
+        @media (max-width: 1400px) {
+            #robot-container {
+                width: 300px;
+                height: 300px;
+            }
+            .section .content {
+                margin-left: auto !important;
+                margin-right: auto !important;
+                max-width: 800px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            #robot-container {
+                width: 200px;
+                height: 200px;
+            }
+            .content {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Robot Animation Container -->
+    <div id="robot-container"></div>
+
+    <main>
+        <section class="section" id="section1">
+            <div class="content">
+                <h1>Welcome to AI Chatbot</h1>
+                <p>Discover the next generation of conversational AI with our cutting-edge chatbot platform. We've combined advanced machine learning with intuitive design to create an AI assistant that truly understands and adapts to your needs.</p>
+                
+                <h2>Why Choose Our AI Chatbot?</h2>
+                <ul class="feature-list">
+                    <li>State-of-the-art Natural Language Processing for human-like interactions</li>
+                    <li>Instant responses available 24/7 with zero downtime</li>
+                    <li>Advanced learning algorithms that improve with each conversation</li>
+                    <li>Support for over 50 languages with real-time translation</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="section" id="section2">
+            <div class="content">
+                <h1>Intelligent Interaction</h1>
+                <p>Experience the future of communication with our AI-powered conversational platform. Our chatbot leverages the latest advancements in artificial intelligence to deliver personalized, context-aware interactions.</p>
+                
+                <h2>Advanced Capabilities</h2>
+                <ul class="feature-list">
+                    <li>Deep learning algorithms for natural conversation flow</li>
+                    <li>Advanced sentiment analysis and emotional intelligence</li>
+                    <li>Dynamic personality adaptation based on user preferences</li>
+                    <li>Multi-platform support across web, mobile, and desktop</li>
+                </ul>
+                
+                <p>Our AI chatbot goes beyond simple responses, offering intelligent solutions and maintaining engaging conversations that feel natural and purposeful.</p>
+            </div>
+        </section>
+
+        <section class="section" id="section3">
+            <div class="content">
+                <h1>Future Innovation</h1>
+                <p>We're pioneering the future of AI-human interaction, pushing the boundaries of what's possible in conversational technology. Our commitment to innovation drives continuous improvements and breakthrough features.</p>
+                
+                <h2>Tomorrow's Technology Today</h2>
+                <ul class="feature-list">
+                    <li>Neural network-based decision making capabilities</li>
+                    <li>Predictive response system using behavioral analysis</li>
+                    <li>Seamless IoT and smart device integration</li>
+                    <li>Regular feature updates and capability expansions</li>
+                    <li>Community-driven development and customization</li>
+                </ul>
+                
+                <p>Join us in shaping the future of AI communication. Experience a chatbot that doesn't just respond, but understands, learns, and evolves with every interaction.</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Initialize Lottie Animation
+        const robotAnimation = lottie.loadAnimation({
+            container: document.getElementById('robot-container'),
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: '{% static 'Animation.json' %}'
+        });
+
+        // Robot position and movement logic
+        const robotContainer = document.getElementById('robot-container');
+        const sections = document.querySelectorAll('.section');
+        let currentSection = 0;
+        let isReverse = false;
+
+        // Initial robot position
+        function setInitialRobotPosition() {
+            robotContainer.style.left = '50px';
+            robotContainer.style.top = '50%';
+            robotContainer.style.transform = 'translateY(-50%)';
+        }
+
+        // Intersection Observer for sections
+        const observerOptions = {
+            root: null,
+            threshold: 0.5,
+            rootMargin: '0px'
+        };
+
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Make content visible
+                    entry.target.querySelector('.content').classList.add('visible');
+                    
+                    // Update robot position
+                    const sectionIndex = Array.from(sections).indexOf(entry.target);
+                    moveRobot(sectionIndex);
+                    
+                    // Update current section
+                    currentSection = sectionIndex;
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections
+        sections.forEach(section => {
+            sectionObserver.observe(section);
+        });
+
+        // Robot movement function
+        function moveRobot(sectionIndex) {
+            const newIsReverse = sectionIndex % 2 === 1;
+            
+            // Remove previous animation classes
+            robotContainer.classList.remove('jump', 'jump-reverse');
+            
+            // Add new animation class
+            if (newIsReverse) {
+                robotContainer.classList.add('jump-reverse');
+                robotContainer.style.left = 'calc(100% - 450px)';
+            } else {
+                robotContainer.classList.add('jump');
+                robotContainer.style.left = '50px';
+            }
+            
+            isReverse = newIsReverse;
+        }
+
+        // Initialize robot position
+        setInitialRobotPosition();
+
+        // Scroll event listener for smooth transitions
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', () => {
+            const st = window.pageYOffset || document.documentElement.scrollTop;
+            if (st > lastScrollTop) {
+                // Scrolling down
+                if (currentSection < sections.length - 1) {
+                    moveRobot(currentSection + 1);
+                }
+            } else {
+                // Scrolling up
+                if (currentSection > 0) {
+                    moveRobot(currentSection - 1);
+                }
+            }
+            lastScrollTop = st <= 0 ? 0 : st;
+        });
+
+        // Make first section visible immediately
+        document.querySelector('.section:first-child .content').classList.add('visible');
+    </script>
+</body>
+</html>

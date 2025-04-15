@@ -1,0 +1,278 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Assistant Modes Page</title>
+  <style>
+    @property --angle {
+      syntax: '<angle>';
+      initial-value: 0deg;
+      inherits: false;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #0a0a0a;
+      color: white;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .home-two {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+      background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
+    }
+
+    .container-two {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 1400px;
+      gap: 40px;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    @media (min-width: 768px) {
+      .container-two {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: stretch;
+      }
+    }
+
+    .robot {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 600px;
+      perspective: 1000px;
+    }
+
+    .robot img {
+      width: 100%;
+      max-width: 400px;
+      animation: robotFloat 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 15px rgba(0, 0, 255, 0.2));
+    }
+
+    .grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 30px;
+      width: 100%;
+      max-width: 750px;
+    }
+
+    .card {
+      position: relative;
+      height: 230px;
+      background-color: rgba(30, 30, 30, 0.9);
+      border-radius: 20px;
+      padding: 25px 20px;
+      overflow: hidden;
+      box-shadow: 0 0 12px rgba(0, 0, 255, 0.2);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 1;
+      backdrop-filter: blur(5px);
+    }
+
+    .card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 0 25px rgba(0, 0, 255, 0.3);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      padding: 2px;
+      background: repeating-conic-gradient(
+        from var(--angle),
+        #00e5e5 0deg 20deg,
+        transparent 20deg 40deg,
+        #00e5e5 40deg 60deg,
+        transparent 60deg 80deg,
+        #00e5e5 80deg 100deg,
+        transparent 100deg 120deg
+      );
+      -webkit-mask: 
+        linear-gradient(#000 0 0) content-box, 
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      z-index: 0;
+      animation: glowRotate 4s linear infinite, borderPulse 2s ease-in-out infinite;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 18px;
+      background: linear-gradient(
+        120deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.03) 50%,
+        transparent 100%
+      );
+      z-index: 1;
+      animation: shimmer 3s infinite;
+    }
+
+    .card-content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover .card-content {
+      transform: translateY(-5px);
+    }
+
+    .card h2 {
+      font-size: 1.4rem;
+      margin: 0 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover h2 {
+      color: #60a5fa;
+      transform: scale(1.05);
+    }
+
+    .card p {
+      font-size: 1rem;
+      line-height: 1.5;
+      margin: 0;
+      opacity: 0.9;
+      transition: opacity 0.3s ease;
+    }
+
+    .card:hover p {
+      opacity: 1;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes robotFloat {
+      0%, 100% { 
+        transform: translateY(0) scale(1) rotateY(0deg); 
+      }
+      50% { 
+        transform: translateY(-15px) scale(1.02) rotateY(2deg);
+      }
+    }
+
+    @keyframes glowRotate {
+      0% { --angle: 0deg; }
+      100% { --angle: 360deg; }
+    }
+
+    @keyframes borderPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    @keyframes cardEntrance {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+        filter: blur(3px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+      }
+    }
+
+    .grid .card {
+      animation: cardEntrance 0.8s ease-out backwards;
+    }
+
+    .grid .card:nth-child(1) { animation-delay: 0.1s; }
+    .grid .card:nth-child(2) { animation-delay: 0.2s; }
+    .grid .card:nth-child(3) { animation-delay: 0.3s; }
+    .grid .card:nth-child(4) { animation-delay: 0.4s; }
+
+  </style>
+</head>
+<body>
+<div class="home-two">
+  <div class="container-two">
+    <!-- Left Side -->
+    <div class="robot">
+      <img src="{% static 'images/Robot.png' %}" alt="Typing Robot">
+    </div> 
+
+    <!-- Right Side -->
+    <div class="grid">
+      <!-- Developer Tools -->
+      <div class="card">
+        <div class="card-content">
+          <h2>🧑‍💻 Developer Tools</h2>
+          <p>Fix bugs, write code,<br>generate mini apps</p>
+        </div>
+      </div>
+
+      <!-- Student Study Help -->
+      <div class="card">
+        <div class="card-content">
+          <h2>🎓 Student Study Help</h2>
+          <p>Summarize topics, solve math<br>problems, grammar checker</p>
+        </div>
+      </div>
+
+      <!-- Mental Health Tools -->
+      <div class="card">
+        <div class="card-content">
+          <h2>🧘 Mental Health Tools</h2>
+          <p>Talk it out, grounding<br>exercises, mindfulness</p>
+        </div>
+      </div>
+
+      <!-- Curious Explorer -->
+      <div class="card">
+        <div class="card-content">
+          <h2>🌐 Curious Explorer</h2>
+          <p>Ask about space, tech, life<br>hacks, history, and more</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
