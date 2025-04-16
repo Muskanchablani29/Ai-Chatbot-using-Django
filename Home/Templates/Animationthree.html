@@ -6,32 +6,27 @@
   <title>Mental Wellness AI - Feature</title>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Quicksand', sans-serif;
-    }
-
+  
     .mental-wellness-page {
       background: linear-gradient(135deg, #1a2634, #2e4a5c);
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      padding: 2rem;
+      height: 300px; /* Updated height */
+      width: 700px;  /* Updated width */
+      {% comment %} padding: 2rem; {% endcomment %}
     }
 
     .mental-container {
       background: rgba(255, 255, 255, 0.98);
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
       border-radius: 24px;
-      padding: 3rem;
+      padding: 2rem; /* Reduced padding */
       width: 100%;
-      max-width: 1000px;
-      min-height: 500px;
+      max-width: 700px;
+      min-height: 400px;
       display: flex;
-      gap: 3rem;
+      gap: 2rem; /* Reduced gap */
     }
 
     .mental-animation {
@@ -43,8 +38,8 @@
     }
 
     .ai-interface {
-      width: 380px;
-      height: 380px;
+      width: 280px;  /* Reduced size */
+      height: 280px; /* Reduced size */
       position: relative;
     }
 
@@ -101,7 +96,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 300px;
+      width: 220px;
       z-index: 2;
       display: flex;
       flex-direction: column;
@@ -191,7 +186,7 @@
       }
   
       .mental-heading {
-        font-size: 2rem;
+        font-size: 1.5rem;
         font-weight: 600;
         color: #1a2634;
         margin-bottom: 1.2rem;
@@ -212,12 +207,12 @@
       .wellness-feature {
         background: linear-gradient(135deg, #2e4a5c, #1a2634);
         color: white;
-        padding: 1.2rem;
+        padding: 0.8rem;
         border-radius: 16px;
         transform-origin: left;
         opacity: 0;
         animation: slideIn 0.5s ease-out forwards;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
       }
   
       .wellness-feature:nth-child(2) { animation-delay: 0.2s; }
@@ -283,21 +278,21 @@
       @media (max-width: 768px) {
         .mental-container {
           flex-direction: column;
-          padding: 2rem;
+          padding: 1.5rem;
         }
   
         .ai-interface {
-          width: 280px;
-          height: 280px;
+          width: 240px;
+          height: 240px;
         }
   
         .message-container {
-          width: 240px;
+          width: 200px;
         }
   
         .mental-heading {
           text-align: center;
-          font-size: 1.8rem;
+          font-size: 1.4rem;
         }
   
         .mental-heading::after {

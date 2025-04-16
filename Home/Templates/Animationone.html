@@ -5,38 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Live Typing Code Animation</title>
   <style>
-    body {
+    .Animate-one {
       background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
       margin: 0;
+      width: 700px;
+      height: 400px;
       font-family: 'JetBrains Mono', 'Courier New', monospace;
     }
 
     .code-box {
-      width: min(900px, 90vw);
-      height: min(500px, 80vh);
+      width: 700px;
+      height: 400px;
       background: rgba(26, 26, 26, 0.95);
       color: #e0e0e0;
       border-radius: 12px;
-      box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.3),
-        0 0 2px rgba(255, 255, 255, 0.1) inset;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
       padding: 25px;
       position: relative;
       overflow: hidden;
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      will-change: transform; /* Optimize animations */
     }
 
     .code-box:hover {
       transform: translateY(-5px);
-      box-shadow: 
-        0 12px 40px rgba(0, 0, 0, 0.4),
-        0 0 2px rgba(255, 255, 255, 0.1) inset;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .typing-line {
@@ -46,13 +44,7 @@
       line-height: 1.6;
       opacity: 0;
       transform: translateY(10px);
-      animation: 
-        fadeIn 0.3s ease forwards,
-        slideUp 0.3s ease forwards;
-    }
-
-    .typing-line.active {
-      position: relative;
+      animation: typing 0.3s ease forwards;
     }
 
     .typing-line.active::after {
@@ -65,34 +57,37 @@
       animation: blink 0.8s steps(2) infinite;
     }
 
-    /* Syntax Highlighting */
-    .keyword { color: #ff79c6; }
-    .function { color: #50fa7b; }
-    .string { color: #f1fa8c; }
-    .comment { color: #6272a4; }
-    .number { color: #bd93f9; }
-    .operator { color: #ff79c6; }
+    /* Combine animations for better performance */
+    @keyframes typing {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
     @keyframes blink {
-      0%, 100% { opacity: 1; }
       50% { opacity: 0; }
     }
 
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
-
-    @keyframes slideUp {
-      to { transform: translateY(0); }
-    }
+    /* Optimized syntax highlighting classes */
+    .keyword { color: #ffffff; }
+    .function { color: #00e5e5; }
+    .string { color: #0ac6c6; }
+    .comment { color: #6272a4; font-style: italic; }
+    .number, .operator { color: #4539a3; }
   </style>
 </head>
 <body>
-  <div class="code-box" id="codeBox"></div>
+  <div class="Animate-one"><div class="code-box" id="codeBox"></div></div>
 
   <script>
+    // Cache DOM element
+    const box = document.getElementById('codeBox');
+    const typingSpeed = 30;
+    const lineDelay = 100;
+    
+    // Use const for immutable data
     const codeLines = [
-      { text: '// Welcome to the Code Animation', type: 'comment' },
       { text: 'function createAnimation(config) {', type: 'keyword' },
       { text: '  const { speed = 1, effect = "fade" } = config;', type: 'keyword' },
       { text: '  return new Promise((resolve) => {', type: 'keyword' },
@@ -112,21 +107,41 @@
       { text: '}', type: 'keyword' }
     ];
 
-    const box = document.getElementById('codeBox');
-    let currentLine = 0;
-    const typingSpeed = 30; // Milliseconds per character
-    const lineDelay = 100; // Delay between lines
-
+    // Memoize highlighting function
+    const highlightCache = new Map();
     function applyHighlighting(text, type) {
-      switch(type) {
-        case 'keyword': return `<span class="keyword">${text}</span>`;
-        case 'function': return `<span class="function">${text}</span>`;
-        case 'string': return `<span class="string">${text}</span>`;
-        case 'comment': return `<span class="comment">${text}</span>`;
-        default: return text;
+      const key = `${text}-${type}`;
+      if (highlightCache.has(key)) {
+        return highlightCache.get(key);
       }
+      
+      const highlighted = type === 'normal' ? 
+        text : 
+        `<span class="${type}">${text}</span>`;
+      
+      highlightCache.set(key, highlighted);
+      return highlighted;
     }
 
+    function createTypingAnimation(div, text, type) {
+      let charIndex = 0;
+      
+      function typeChar() {
+        if (charIndex < text.length) {
+          const currentText = text.substring(0, charIndex + 1);
+          div.innerHTML = applyHighlighting(currentText, type);
+          charIndex++;
+          requestAnimationFrame(() => setTimeout(typeChar, typingSpeed));
+        } else {
+          div.classList.remove('active');
+          typeLine();
+        }
+      }
+      
+      typeChar();
+    }
+
+    let currentLine = 0;
     function typeLine() {
       if (currentLine >= codeLines.length) {
         currentLine = 0;
@@ -140,27 +155,12 @@
       div.classList.add('typing-line', 'active');
       box.appendChild(div);
 
-      let charIndex = 0;
-      const text = line.text;
-
-      function typeChar() {
-        if (charIndex < text.length) {
-          const currentText = text.substring(0, charIndex + 1);
-          div.innerHTML = applyHighlighting(currentText, line.type);
-          charIndex++;
-          setTimeout(typeChar, typingSpeed);
-        } else {
-          div.classList.remove('active');
-          currentLine++;
-          setTimeout(typeLine, lineDelay);
-        }
-      }
-
-      typeChar();
+      currentLine++;
+      setTimeout(() => createTypingAnimation(div, line.text, line.type), lineDelay);
     }
 
-    // Start the animation
-    typeLine();
+    // Start animation when page is fully loaded
+    document.addEventListener('DOMContentLoaded', typeLine);
   </script>
 </body>
 </html>

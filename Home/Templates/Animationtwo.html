@@ -4,19 +4,19 @@
   <meta charset="UTF-8" />
   <title>AI Study Assistant - Solar System</title>
   <style>
-    body {
+    .animate-two {
       margin: 0;
       background: #0c1222;
       font-family: 'Courier New', monospace;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      height: fit-contain;
     }
 
-    .container {
-      width: 900px;
-      height: 500px;
+    .container-animate {
+      width: 700px;
+      height: 400px;
       background: #101828;
       border-radius: 20px;
       position: relative;
@@ -217,7 +217,8 @@
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="animate-two">
+  <div class="container-animate">
     <div class="board">
       <div id="typewriter" class="typed-text"></div>
       <div class="controls">
@@ -267,6 +268,7 @@
       </svg>
     </div>
   </div>
+  
 
   <script>
     const text = `Structure of the Solar System
