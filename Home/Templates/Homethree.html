@@ -6,206 +6,117 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Assistant Features</title>
     <style>
-        @property --angle {
-            syntax: '<angle>';
-            initial-value: 0deg;
-            inherits: false;
-        }
+        
+@property --angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #0a0a0a;
-            color: #fff;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+.home-three {
+    display: flex;
+    min-height: 100vh;
+    padding: 60px 80px;
+    gap: 60px;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
+}
 
-        .home-three {
-            display: flex;
-            min-height: 100vh;
-            padding: 60px 80px;
-            gap: 60px;
-            align-items: center;
-            justify-content: center;
-            background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
-        }
+.tool-list {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    perspective: 1000px;
+    min-width: 250px;
+    position: relative;
+}
 
-        .tool-list {
-            display: flex;
-            flex-direction: column;
-            gap: 40px;
-            perspective: 1000px;
-            min-width: 250px;
-            position: relative;
-        }
+.tool-item {
+    position: relative;
+    font-size: 2rem;
+    color: #777;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    padding: 10px 20px;
+    overflow: hidden;
+}
 
-        .tool-item {
-            position: relative;
-            font-size: 2rem;
-            color: #777;
-            cursor: pointer;
-            transition: color 0.3s ease;
-            padding: 10px 20px;
-            overflow: hidden;
-        }
+.tool-item span {
+    position: relative;
+    z-index: 2;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
 
-        .tool-item span {
-            position: relative;
-            z-index: 2;
-            transition: color 0.3s ease;
-        }
+.tool-item.active span {
+    color: #00e5e5;
+    text-shadow: 0 0 8px rgba(0, 229, 229, 0.5);
+}
 
-        .tool-item.active span {
-            color: #00e5e5;
-            text-shadow: 0 0 8px rgba(0, 229, 229, 0.5);
-        }
+.tool-item::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -100%;
+    width: 3px;
+    height: 100%;
+    background: #00e5e5;
+    transform: translateY(-50%);
+    transition: left 0.5s ease;
+}
 
-        .sliding-line {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 3px;
-            height: 100%;
-            background: #00e5e5;
-            transform: translateX(-100%);
-            transition: transform 0.4s ease;
-            box-shadow: 0 0 8px #00e5e5, 0 0 15px #00e5e5;
-        }
+.tool-item.active::before {
+    left: 100%;
+}
 
-        .tool-item.active .sliding-line {
-            transform: translateX(0);
-        }
+.tool-display {
+    flex: 1;
+    position: relative;
+    background: rgba(26, 26, 26, 0.95);
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(0, 229, 229, 0.2);
+    max-width: 900px;
+    height: 500px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 1;
+}
 
-        .tool-display {
-            flex: 1;
-            position: relative;
-            background: rgba(26, 26, 26, 0.95);
-            padding: 50px;
-            border-radius: 18px;
-            box-shadow: 0 8px 32px rgba(0, 229, 229, 0.2);
-            max-width: 900px;
-            height: 520px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
+.tool-display::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 18px;
+    padding: 2px;
+    background: conic-gradient(
+        from var(--angle),
+        #00e5e5,
+        #0099ff,
+        #00e5e5
+    );
+    -webkit-mask: 
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: rotate-gradient 4s linear infinite;
+}
 
-        .tool-display::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 18px;
-            padding: 2px;
-            background: conic-gradient(
-                from var(--angle),
-                #00e5e5,
-                #0099ff,
-                #00e5e5
-            );
-            -webkit-mask: 
-                linear-gradient(#000 0 0) content-box,
-                linear-gradient(#000 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            animation: rotate-gradient 4s linear infinite;
-        }
-
-        .animated-text {
-            font-size: 3rem;
-            margin-bottom: 30px;
-            position: relative;
-            animation: fade-in-up 0.8s ease;
-            text-align: center;
-            color: #00e5e5;
-            text-shadow: 0 0 10px rgba(0, 229, 229, 0.5);
-        }
-
-        .underline {
-            height: 4px;
-            width: 0;
-            background: #00e5e5;
-            position: absolute;
-            left: 0;
-            bottom: -10px;
-            animation: line-expand 1.2s ease forwards;
-            box-shadow: 0 0 8px #00e5e5, 0 0 15px #00e5e5;
-        }
-
-        .tool-description {
-            font-size: 1.3rem;
-            background: rgba(34, 34, 34, 0.8);
-            border-radius: 12px;
-            {% comment %} padding: 20px; {% endcomment %}
-            text-align: center;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s ease;
-            backdrop-filter: blur(5px);
-            color: #fff;
-            {% comment %} max-width: 600px; {% endcomment %}
-            margin: 0 auto;
-            width: 700px;
-            height: 400px;
-        }
-
-        .tool-description.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        @keyframes rotate-gradient {
-            to { --angle: 360deg; }
-        }
-
-        @keyframes fade-in-up {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes line-expand {
-            from { width: 0; }
-            to { width: 100%; }
-        }
-
-        @media (max-width: 768px) {
-            .home-three {
-                flex-direction: column;
-                padding: 30px;
-                gap: 40px;
-            }
-
-            .tool-display {
-                height: auto;
-                padding: 30px;
-                max-width: 100%;
-                min-height: 300px;
-            }
-
-            .animated-text {
-                font-size: 2rem;
-            }
-
-            .tool-item {
-                font-size: 1.5rem;
-            }
-        }
+@keyframes rotate-gradient {
+    to { --angle: 360deg; }
+}
     </style>
 </head>
 <body>
@@ -219,10 +130,6 @@
         </div>
 
         <div class="tool-display">
-            <div class="animated-text" id="animatedText">
-                <span></span>
-                <div class="underline"></div>
-            </div>
             <div class="tool-description" id="toolComponent"></div>
         </div>
     </div>
@@ -232,15 +139,18 @@
             const tools = [
                 {
                     title: "Code Generator",
-                    templatePath: "{% url 'Home:Animationone' %}"
+                    templatePath: "{% url 'Home:Animationone' %}",
+                    animationFunction: "startTypingAnimation"
                 },
                 {
                     title: "Study Assistance",
-                    templatePath: "{% url 'Home:Animationtwo' %}"
+                    templatePath: "{% url 'Home:Animationtwo' %}",
+                    animationFunction: "startAnimation"
                 },
                 {
                     title: "Mindful Journaling",
-                    templatePath: "{% url 'Home:Animationthree' %}"
+                    templatePath: "{% url 'Home:Animationthree' %}",
+                    animationFunction: "startMessageAnimation"
                 },
                 {
                     title: "🌍 Ask Anything",
@@ -249,7 +159,6 @@
             ];
 
             let currentIndex = 0;
-            const textEl = document.getElementById("animatedText");
             const contentEl = document.getElementById("toolComponent");
             const toolItems = document.querySelectorAll(".tool-item");
             let rotationInterval;
@@ -257,80 +166,66 @@
 
             toolItems.forEach((item, index) => {
                 item.addEventListener('click', () => activateTool(index));
-                
-                item.addEventListener('mouseenter', () => {
-                    clearInterval(rotationInterval);
-                });
-                
-                item.addEventListener('mouseleave', () => {
-                    startAutoRotation();
-                });
             });
 
-            function activateTool(index) {
+            async function activateTool(index) {
                 clearInterval(rotationInterval);
                 updateActiveState(index);
                 startAutoRotation();
             }
 
             async function updateActiveState(index) {
-                toolItems.forEach(item => {
-                    item.classList.remove("active");
-                    const existingLine = item.querySelector(".sliding-line");
-                    if (existingLine) existingLine.remove();
-                });
+                toolItems.forEach(item => item.classList.remove("active"));
+                toolItems[index].classList.add("active");
 
-                currentIndex = index;
-                
-                const currentItem = toolItems[currentIndex];
-                
-                const slidingLine = document.createElement("div");
-                slidingLine.className = "sliding-line";
-                currentItem.appendChild(slidingLine);
-                
-                requestAnimationFrame(async () => {
-                    currentItem.classList.add("active");
-                    
-                    contentEl.style.opacity = "0";
-                    contentEl.style.transform = "translateY(20px)";
-                    
-                    try {
-                        const response = await fetch(tools[currentIndex].templatePath, {
-                            headers: {
-                                'X-CSRFToken': csrfToken,
-                                'Accept': 'text/html'
-                            },
-                            credentials: 'same-origin'
-                        });
+                try {
+                    const response = await fetch(tools[index].templatePath, {
+                        headers: {
+                            'X-CSRFToken': csrfToken,
+                            'Accept': 'text/html'
+                        },
+                        credentials: 'same-origin'
+                    });
 
-                        if (!response.ok) throw new Error('Failed to load template');
-                        const templateContent = await response.text();
+                    if (!response.ok) throw new Error('Failed to load template');
+                    const templateContent = await response.text();
 
-                        setTimeout(() => {
-                            textEl.innerHTML = `${tools[currentIndex].title}<div class="underline"></div>`;
-                            contentEl.innerHTML = templateContent;
-                            contentEl.classList.add("active");
-                            contentEl.style.opacity = "1";
-                            contentEl.style.transform = "translateY(0)";
-                        }, 300);
-                    } catch (error) {
-                        console.error('Error loading template:', error);
-                        contentEl.innerHTML = '<p>Error loading content. Please try again.</p>';
+                    contentEl.innerHTML = templateContent;
+
+                    // Re-execute scripts in the loaded content
+                    const scripts = contentEl.querySelectorAll('script');
+                    scripts.forEach(script => {
+                        const newScript = document.createElement('script');
+                        if (script.src) {
+                            newScript.src = script.src; // Copy external script src
+                        } else {
+                            newScript.textContent = script.textContent; // Copy inline script content
+                        }
+                        document.body.appendChild(newScript);
+                        document.body.removeChild(newScript); // Remove after execution
+                    });
+
+                    // Trigger animation if defined
+                    if (tools[index].animationFunction && typeof window[tools[index].animationFunction] === "function") {
+                        console.log(`Calling animation function: ${tools[index].animationFunction}`);
+                        window[tools[index].animationFunction]();
                     }
-                });
+                } catch (error) {
+                    console.error('Error loading template:', error);
+                    contentEl.innerHTML = '<p>Error loading content. Please try again.</p>';
+                }
             }
 
             function autoRotate() {
-                const nextIndex = (currentIndex + 1) % tools.length;
-                updateActiveState(nextIndex);
+                currentIndex = (currentIndex + 1) % tools.length; // Ensure cycling through all tools
+                updateActiveState(currentIndex);
             }
 
             function startAutoRotation() {
                 if (rotationInterval) clearInterval(rotationInterval);
-                rotationInterval = setInterval(autoRotate, 4000);
+                rotationInterval = setInterval(autoRotate, 7000); // Extended timing to 7 seconds
             }
 
-            // Initialize
             updateActiveState(0);
             startAutoRotation();
         });

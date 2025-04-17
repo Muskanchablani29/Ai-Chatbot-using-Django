@@ -281,6 +281,7 @@
 - Jupiter and Saturn are gas giants.
 - Uranus and Neptune are ice giants.`;
 
+
     const typewriter = document.getElementById("typewriter");
     let i = 0;
 
@@ -356,10 +357,13 @@
     }
 
     // Initialize animations
-    document.addEventListener('DOMContentLoaded', () => {
+    function startAnimation() {
       setTimeout(typeNext, 800);
       addOrbitAnimation();
-    });
+    }
+
+    // Start animation when page loads
+    document.addEventListener('DOMContentLoaded', startAnimation);
 
     // Add Font Awesome for icons
     const fontAwesome = document.createElement('link');
@@ -367,5 +371,3 @@
     fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css';
     document.head.appendChild(fontAwesome);
   </script>
-</body>
-</html>

@@ -5,36 +5,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Live Typing Code Animation</title>
   <style>
+    :root {
+      --typing-speed: 30ms;
+      --line-delay: 100ms;
+      --primary-bg: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);
+      --box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      --hover-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    }
+
     .Animate-one {
-      background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);
+      background: var(--primary-bg);
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 0;
-      width: 700px;
+      width: 800px;
       height: 400px;
       font-family: 'JetBrains Mono', 'Courier New', monospace;
+      z-index: 2;
+      position: relative;
     }
 
     .code-box {
-      width: 700px;
+      width: 800px;
       height: 400px;
       background: rgba(26, 26, 26, 0.95);
       color: #e0e0e0;
       border-radius: 12px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      box-shadow: var(--box-shadow);
       padding: 25px;
       position: relative;
+      z-index: 2;
       overflow: hidden;
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      will-change: transform; /* Optimize animations */
+      transform: translateZ(0);
+      will-change: transform;
+      contain: layout size;
+      box-sizing: border-box;
     }
 
     .code-box:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: var(--hover-shadow);
+      transition: box-shadow 0.3s ease;
     }
 
     .typing-line {
@@ -43,8 +55,11 @@
       font-size: 15px;
       line-height: 1.6;
       opacity: 0;
-      transform: translateY(10px);
+      transform: translateY(10px) translateZ(0);
       animation: typing 0.3s ease forwards;
+      will-change: transform, opacity;
+      contain: content;
+      position: relative;
     }
 
     .typing-line.active::after {
@@ -57,11 +72,10 @@
       animation: blink 0.8s steps(2) infinite;
     }
 
-    /* Combine animations for better performance */
     @keyframes typing {
       to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) translateZ(0);
       }
     }
 
@@ -69,24 +83,35 @@
       50% { opacity: 0; }
     }
 
-    /* Optimized syntax highlighting classes */
-    .keyword { color: #ffffff; }
-    .function { color: #00e5e5; }
-    .string { color: #0ac6c6; }
+    .keyword { color: #ff79c6; }
+    .function { color: #50fa7b; }
+    .string { color: #f1fa8c; }
     .comment { color: #6272a4; font-style: italic; }
-    .number, .operator { color: #4539a3; }
+    .number, .operator { color: #bd93f9; }
+
+    #codeBox::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    #codeBox::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+    }
+
+    #codeBox::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
   </style>
 </head>
 <body>
   <div class="Animate-one"><div class="code-box" id="codeBox"></div></div>
 
   <script>
-    // Cache DOM element
     const box = document.getElementById('codeBox');
     const typingSpeed = 30;
-    const lineDelay = 100;
     
-    // Use const for immutable data
     const codeLines = [
       { text: 'function createAnimation(config) {', type: 'keyword' },
       { text: '  const { speed = 1, effect = "fade" } = config;', type: 'keyword' },
@@ -107,7 +132,20 @@
       { text: '}', type: 'keyword' }
     ];
 
-    // Memoize highlighting function
+    const divPool = {
+      pool: [],
+      get() {
+        return this.pool.pop() || document.createElement('div');
+      },
+      release(div) {
+        if (this.pool.length < 50) {
+          div.innerHTML = '';
+          div.className = '';
+          this.pool.push(div);
+        }
+      }
+    };
+
     const highlightCache = new Map();
     function applyHighlighting(text, type) {
       const key = `${text}-${type}`;
@@ -124,43 +162,82 @@
     }
 
     function createTypingAnimation(div, text, type) {
+      const batchSize = 3;
       let charIndex = 0;
+      let lastFrame = performance.now();
       
-      function typeChar() {
-        if (charIndex < text.length) {
-          const currentText = text.substring(0, charIndex + 1);
-          div.innerHTML = applyHighlighting(currentText, type);
-          charIndex++;
-          requestAnimationFrame(() => setTimeout(typeChar, typingSpeed));
+      function typeChar(timestamp) {
+        if (timestamp - lastFrame >= typingSpeed) {
+          if (charIndex < text.length) {
+            const nextIndex = Math.min(charIndex + batchSize, text.length);
+            const currentText = text.substring(0, nextIndex);
+            div.innerHTML = applyHighlighting(currentText, type);
+            charIndex = nextIndex;
+            lastFrame = timestamp;
+            requestAnimationFrame(typeChar);
+          } else {
+            div.classList.remove('active');
+            setTimeout(typeLine, 100); // Reduced delay between lines
+          }
         } else {
-          div.classList.remove('active');
-          typeLine();
+          requestAnimationFrame(typeChar);
         }
       }
       
-      typeChar();
+      requestAnimationFrame(typeChar);
     }
 
     let currentLine = 0;
+    const MAX_VISIBLE_LINES = 15; // Adjusted for height
+
     function typeLine() {
       if (currentLine >= codeLines.length) {
+        // Clear and restart animation
+        while (box.firstChild) {
+          const oldDiv = box.firstChild;
+          divPool.release(oldDiv);
+          box.removeChild(oldDiv);
+        }
         currentLine = 0;
-        box.innerHTML = '';
-        setTimeout(typeLine, 1000);
+        requestAnimationFrame(typeLine);
         return;
       }
 
-      const line = codeLines[currentLine];
-      const div = document.createElement('div');
+      // Remove old lines if exceeding MAX_VISIBLE_LINES
+      while (box.children.length >= MAX_VISIBLE_LINES) {
+        const oldDiv = box.firstChild;
+        divPool.release(oldDiv);
+        box.removeChild(oldDiv);
+      }
+
+      const div = divPool.get();
       div.classList.add('typing-line', 'active');
       box.appendChild(div);
 
+      createTypingAnimation(
+        div, 
+        codeLines[currentLine].text, 
+        codeLines[currentLine].type
+      );
+      
       currentLine++;
-      setTimeout(() => createTypingAnimation(div, line.text, line.type), lineDelay);
     }
 
-    // Start animation when page is fully loaded
-    document.addEventListener('DOMContentLoaded', typeLine);
+    function startTypingAnimation() {
+      // Start animation when page loads
+      requestAnimationFrame(typeLine);
+    }
+
+    // Start animation when page loads
+    document.addEventListener('DOMContentLoaded', startTypingAnimation, { passive: true });
+
+    // Ensure animation continues to run
+    setInterval(() => {
+      if (!box.children.length) {
+        currentLine = 0;
+        requestAnimationFrame(typeLine);
+      }
+    }, 2000);
   </script>
 </body>
 </html>
