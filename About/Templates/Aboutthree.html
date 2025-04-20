@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Future Vision</title>
+  <style>
+
+    .section-title {
+      text-align: center;
+      font-size: 34px;
+      font-weight: bold;
+      color: #1d1d1d;
+      margin-bottom: 80px;
+    }
+
+    .roadmap {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 60px 40px;
+      max-width: 1000px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .journey-box {
+      background: white;
+      padding: 20px 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    .journey-box::before {
+      content: attr(data-date);
+      position: absolute;
+      top: 12px;
+      left: 20px;
+      font-size: 12px;
+      color: #666;
+      font-weight: bold;
+    }
+
+    .journey-box h3 {
+      margin: 30px 0 10px;
+      font-size: 18px;
+      color: #174e4a;
+    }
+
+    .journey-box p {
+      margin: 0;
+      font-size: 14px;
+      color: #555;
+    }
+
+    /* Line connectors */
+    .roadmap::after {
+      content: "";
+      position: absolute;
+      top: 25px;
+      left: 50%;
+      width: 2px;
+      height: 100%;
+      background: repeating-linear-gradient(
+        to bottom,
+        #a7bfb7,
+        #a7bfb7 8px,
+        transparent 8px,
+        transparent 16px
+      );
+      z-index: 0;
+    }
+
+    .journey-box:nth-child(odd) {
+      justify-self: start;
+    }
+
+    .journey-box:nth-child(even) {
+      justify-self: end;
+    }
+
+    @media (max-width: 768px) {
+      .roadmap {
+        grid-template-columns: 1fr;
+      }
+
+      .journey-box {
+        justify-self: center !important;
+        width: 90%;
+      }
+
+      .roadmap::after {
+        left: 0;
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h2 class="section-title">Future Vision</h2>
+
+  <div class="roadmap">
+    <div class="journey-box" data-date="2025 May">
+      <h3>Multilingual Expansion</h3>
+      <p>Support for 20+ global languages to connect with a broader audience and improve accessibility.</p>
+    </div>
+
+    <div class="journey-box" data-date="2025 July">
+      <h3>Mental Health Prompts</h3>
+      <p>Enhanced emotional check-ins, stress-reducing conversations, and motivational support features.</p>
+    </div>
+
+    <div class="journey-box" data-date="2025 October">
+      <h3>Voice Input Integration</h3>
+      <p>Hands-free interaction using speech recognition for seamless user experience.</p>
+    </div>
+
+    <div class="journey-box" data-date="2026 January">
+      <h3>Smart Personalization</h3>
+      <p>AI adapts to individual user behavior to provide personalized advice and learning.</p>
+    </div>
+  </div>
+
+</body>
+</html>

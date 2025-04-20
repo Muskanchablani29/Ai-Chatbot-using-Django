@@ -1,0 +1,105 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>About Us - AI Chatbot</title>
+  <style>
+
+    .about-intro {
+      margin-top: 80px; 
+      height: 70vh; /* Reduced height */
+      width: 100%; /* Full viewport width */
+      background-image: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(255, 255, 255, 0.1)),
+                        url('{% static 'images/Aboutone.png' %}');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
+    }
+
+    .about-intro h1 {
+      font-size: 3.5rem;
+      margin-bottom: 30px;
+      background: linear-gradient(90deg, #ffffff, #f8f8f8, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: glow 2s infinite alternate, slideIn 1s ease-out;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .about-intro p {
+      max-width: 700px;
+      font-size: 1.2rem;
+      line-height: 1.8;
+      color: #ffffff;
+      opacity: 0;
+      animation: fadeIn 1s ease-out forwards;
+      animation-delay: 0.5s;
+      padding: 0 20px;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+      margin: 0 auto 20px;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.6),
+                     0 0 25px rgba(255, 255, 255, 0.4);
+      }
+      to {
+        text-shadow: 0 0 25px rgba(255, 255, 255, 0.9),
+                     0 0 45px rgba(255, 255, 255, 0.6);
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(-30px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Added responsive design */
+    @media (max-width: 768px) {
+      .about-intro h1 {
+        font-size: 2.5rem;
+      }
+      
+      .about-intro p {
+        font-size: 1rem;
+        max-width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="about-intro">
+    <h1>About Us</h1>
+    <p>Empowering the future through innovative AI solutions. We specialize in creating intelligent chatbot experiences that transform the way you interact with technology.</p>
+  </div>
+
+</body>
+</html>

@@ -3,65 +3,140 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Assistant - Login/Signup</title>
+  <title>Login & Sign Up</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#181717',
+            secondary: '#00F0FF',
+          },
+          borderRadius: {
+            button: '8px',
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
   <style>
-    :root {
-      --primary-color: #00f7ff;
-      --secondary-color: #232323;
-      --text-color: #ffffff;
-      --background-color: #000000;
-      --box-shadow: 0 8px 32px rgba(0, 247, 255, 0.15);
-      --hexagon-color: rgba(0, 247, 255, 0.05);
-      --hexagon-border: rgba(0, 247, 255, 0.2);
-      --hexagon-hover: rgba(0, 247, 255, 0.2);
-      --hexagon-size: 100px;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: var(--background-color);
+      font-family: 'Inter', sans-serif;
+      background-color: #0a0a0a;
       min-height: 100vh;
-      {% comment %} overflow: hidden; {% endcomment %}
+      overflow-x: hidden;
       position: relative;
     }
 
-    .hexagon-bg {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+    .cube-container {
+      perspective: 1000px;
+      width: 100%;
+      max-width: 450px;
+      height: 600px;
+    }
+
+    .cube {
+      position: relative;
       width: 100%;
       height: 100%;
-      z-index: 0;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
+      transform-style: preserve-3d;
+      transition: transform 0.8s ease-in-out;
+    }
+
+    .cube-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      overflow: hidden;
+    }
+
+    .login-face {
+      transform: rotateY(0deg);
+    }
+
+    .signup-face {
+      transform: rotateY(180deg);
+    }
+
+    .cube.show-signup {
+      transform: rotateY(-180deg);
+    }
+
+    .form-input {
+      background-color: rgba(30, 30, 30, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+      border-color: #00F0FF;
+      box-shadow: 0 0 0 2px rgba(0, 240, 255, 0.2);
+      background-color: rgba(30, 30, 30, 0.9);
+    }
+
+    .form-label {
+      transition: all 0.3s ease;
       pointer-events: none;
     }
 
-    .hexagon-container {
-      position: relative;
-      width: var(--hexagon-size);
-      height: calc(var(--hexagon-size) * 0.866);
-      margin: calc(var(--hexagon-size) * 0.433) calc(var(--hexagon-size) * 0.25);
-      pointer-events: auto;
+    .form-input:focus + .form-label,
+    .form-input:not(:placeholder-shown) + .form-label {
+      transform: translateY(-24px) scale(0.85);
+      color: #00F0FF;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #00F0FF, #7B2FFF);
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #7B2FFF, #00F0FF);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 240, 255, 0.4);
+    }
+
+    .toggle-btn {
+      transition: all 0.3s ease;
+    }
+
+    .toggle-btn:hover {
+      color: #00F0FF;
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+    }
+
+    /* Updated Hexagon Background Animation */
+    .hexagon-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(0, 240, 255, 0.05) 0%, transparent 70%);
+      z-index: -1;
+      overflow: hidden;
     }
 
     .hexagon {
       position: absolute;
-      width: 100%;
-      height: 100%;
-      background: var(--background-color);
-      clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-      transition: all 0.3s ease;
+      width: 120px;
+      height: 120px;
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(123, 47, 255, 0.1));
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      animation: float 15s infinite ease-in-out;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(0, 240, 255, 0.1);
+      box-shadow: 
+        0 0 20px rgba(0, 240, 255, 0.2),
+        inset 0 0 20px rgba(0, 240, 255, 0.1);
     }
 
     .hexagon::before {
@@ -71,373 +146,123 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: transparent;
-      clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-      border: 1px solid var(--hexagon-border);
-      box-sizing: border-box;
-      transition: all 0.3s ease;
+      background: radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.2), transparent 70%);
+      animation: pulse 4s infinite;
     }
 
-    .hexagon::after {
-      content: '';
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
-      background: transparent;
-      clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-      border: 2px solid transparent;
-      box-sizing: border-box;
-      transition: all 0.3s ease;
-    }
+    .hexagon:nth-child(1) { animation-delay: 0s; }
+    .hexagon:nth-child(2) { animation-delay: -2s; }
+    .hexagon:nth-child(3) { animation-delay: -4s; }
+    .hexagon:nth-child(4) { animation-delay: -6s; }
+    .hexagon:nth-child(5) { animation-delay: -8s; }
+    .hexagon:nth-child(6) { animation-delay: -10s; }
+    .hexagon:nth-child(7) { animation-delay: -12s; }
 
-    .hexagon.active::after {
-      border-color: var(--primary-color);
-      filter: drop-shadow(0 0 8px var(--primary-color));
-      animation: borderGlow 2s infinite;
-    }
-
-    .hexagon-lines {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-    }
-
-    .hexagon-line {
-      position: absolute;
-      background: var(--hexagon-border);
-      height: 1px;
-      width: 0;
-      opacity: 0;
-      transition: all 0.5s ease;
-    }
-
-    @keyframes borderGlow {
-      0% { filter: drop-shadow(0 0 5px var(--primary-color)); }
-      50% { filter: drop-shadow(0 0 20px var(--primary-color)); }
-      100% { filter: drop-shadow(0 0 5px var(--primary-color)); }
-    }
-
-    .content-wrapper {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .messages {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 1000;
-    }
-
-    .alert {
-      padding: 15px 25px;
-      margin-bottom: 10px;
-      border-radius: 8px;
-      font-weight: 500;
-      animation: slideIn 0.3s ease-out;
-      backdrop-filter: blur(10px);
-    }
-
-    @keyframes slideIn {
-      from { transform: translateX(100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-
-    .alert-success {
-      background: rgba(0, 247, 255, 0.2);
-      border: 1px solid var(--primary-color);
-      color: var(--primary-color);
-    }
-
-    .alert-error {
-      background: rgba(255, 0, 0, 0.2);
-      border: 1px solid #ff0000;
-      color: #ff0000;
-    }
-
-    .flip-box {
-      width: 450px;
-      height: 500px;
-      perspective: 2000px;
-    }
-
-    .flip-box-inner {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      transition: transform 1s;
-      transform-style: preserve-3d;
-    }
-
-    .flip-box.flipped .flip-box-inner {
-      transform: rotateY(180deg);
-    }
-
-    .flip-box-front, .flip-box-back {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      backface-visibility: hidden;
-      background: rgba(0, 0, 0, 0.8);
-      padding: 40px;
-      border-radius: 20px;
-      border: 1px solid var(--primary-color);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 0 20px rgba(0, 247, 255, 0.1);
-    }
-
-    .flip-box-front {
-      transform: rotateY(0deg);
-    }
-
-    .flip-box-back {
-      transform: rotateY(180deg);
-    }
-
-    h2 {
-      color: var(--primary-color);
-      margin-bottom: 30px;
-      font-size: 28px;
-      text-align: center;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    form label {
-      color: var(--text-color);
-      font-weight: 500;
-      margin-bottom: 8px;
-      display: block;
-    }
-
-    form input {
-      width: 100%;
-      padding: 12px 15px;
-      background: rgba(0, 247, 255, 0.05);
-      border: 1px solid rgba(0, 247, 255, 0.2);
-      border-radius: 8px;
-      color: var(--text-color);
-      font-size: 16px;
-      transition: all 0.3s ease;
-    }
-
-    form input:focus {
-      border-color: var(--primary-color);
-      outline: none;
-      box-shadow: 0 0 10px rgba(0, 247, 255, 0.2);
-    }
-
-    button {
-      padding: 12px 20px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    button[type="submit"] {
-      background: var(--primary-color);
-      color: var(--background-color);
-      margin-top: 10px;
-    }
-
-    button[type="submit"]:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0, 247, 255, 0.3);
-    }
-
-    button[type="button"] {
-      background: transparent;
-      color: var(--primary-color);
-      border: 1px solid var(--primary-color);
-      margin-top: 10px;
-    }
-
-    button[type="button"]:hover {
-      background: rgba(0, 247, 255, 0.1);
-    }
-
-    @media (max-width: 480px) {
-      .flip-box {
-        width: 100%;
-        height: 550px;
+    @keyframes float {
+      0% {
+        transform: translateY(0) translateX(0) rotate(0deg) scale(1);
+        opacity: 0.3;
       }
+      25% {
+        transform: translateY(-50px) translateX(20px) rotate(90deg) scale(1.1);
+        opacity: 0.6;
+      }
+      50% {
+        transform: translateY(-100px) translateX(-20px) rotate(180deg) scale(1);
+        opacity: 0.3;
+      }
+      75% {
+        transform: translateY(-50px) translateX(-40px) rotate(270deg) scale(1.1);
+        opacity: 0.6;
+      }
+      100% {
+        transform: translateY(0) translateX(0) rotate(360deg) scale(1);
+        opacity: 0.3;
+      }
+    }
 
-      .hexagon-container {
-        --hexagon-size: 60px;
+    @keyframes pulse {
+      0% {
+        opacity: 0.3;
+      }
+      50% {
+        opacity: 0.7;
+      }
+      100% {
+        opacity: 0.3;
       }
     }
   </style>
 </head>
-<body>
-  <div class="hexagon-bg" id="hexagonBg"></div>
+<body class="flex items-center justify-center p-4">
+  <div class="hexagon-bg">
+    <div class="hexagon" style="top: 5%; left: 15%;"></div>
+    <div class="hexagon" style="top: 25%; left: 45%;"></div>
+    <div class="hexagon" style="top: 65%; left: 75%;"></div>
+    <div class="hexagon" style="top: 45%; left: 5%;"></div>
+    <div class="hexagon" style="top: 75%; left: 35%;"></div>
+    <div class="hexagon" style="top: 15%; left: 85%;"></div>
+    <div class="hexagon" style="top: 85%; left: 65%;"></div>
+  </div>
 
-  <div class="content-wrapper">
-    {% if messages %}
-    <div class="messages">
-      {% for message in messages %}
-      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-      {% endfor %}
-    </div>
-    {% endif %}
-
-    <div class="flip-box" id="flipBox">
-      <div class="flip-box-inner">
-        <div class="flip-box-front">
-          <h2>Create Account</h2>
-          <form method="POST" action="{% url 'Profile:signup' %}">
-            {% csrf_token %}
-            {{ signup_form.as_p }}
-            <button type="submit">Sign Up</button>
-            <button type="button" onclick="flip()">Already have an account? Login</button>
-          </form>
+  <div class="cube-container">
+    <div class="cube" id="cube">
+      <!-- Login Face -->
+      <div class="cube-face login-face bg-primary bg-opacity-80 rounded-lg shadow-2xl p-8 backdrop-blur-lg">
+        <div class="text-center mb-8">
+          <h1 class="font-['Pacifico'] text-4xl text-white mb-2">AI Assistant</h1>
+          <h2 class="text-2xl font-bold text-white">Welcome Back</h2>
+          <p class="text-gray-400">Sign in to continue to your AI assistant</p>
         </div>
+        <form method="POST" action="{% url 'Profile:login' %}" class="space-y-6">
+          {% csrf_token %}
+          {{ login_form.as_p }}
+          <button type="submit" class="btn-primary w-full py-3 text-white font-medium !rounded-button">Sign In</button>
+        </form>
+        <div class="mt-6 text-center">
+          <p class="text-gray-400">
+            Don't have an account? 
+            <button type="button" class="toggle-btn text-[#00F0FF] font-medium hover:underline" id="show-signup">Sign Up</button>
+          </p>
+        </div>
+      </div>
 
-        <div class="flip-box-back">
-          <h2>Welcome Back</h2>
-          <form method="POST" action="{% url 'Profile:login' %}">
-            {% csrf_token %}
-            {{ login_form.as_p }}
-            <button type="submit">Login</button>
-            <button type="button" onclick="flip()">Don't have an account? Sign Up</button>
-          </form>
+      <!-- Signup Face -->
+      <div class="cube-face signup-face bg-primary bg-opacity-80 rounded-lg shadow-2xl p-8 backdrop-blur-lg">
+        <div class="text-center mb-6">
+          <h1 class="font-['Pacifico'] text-4xl text-white mb-2">AI Assistant</h1>
+          <h2 class="text-2xl font-bold text-white">Create Account</h2>
+          <p class="text-gray-400">Join our AI-powered platform</p>
+        </div>
+        <form method="POST" action="{% url 'Profile:signup' %}" class="space-y-5">
+          {% csrf_token %}
+          {{ signup_form.as_p }}
+          <button type="submit" class="btn-primary w-full py-3 text-white font-medium !rounded-button">Create Account</button>
+        </form>
+        <div class="mt-5 text-center">
+          <p class="text-gray-400">
+            Already have an account? 
+            <button type="button" class="toggle-btn text-[#00F0FF] font-medium hover:underline" id="show-login">Sign In</button>
+          </p>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    // Create hexagon background
-    const hexagonBg = document.getElementById('hexagonBg');
-    const rows = 8;
-    const cols = 8;
-    const hexagons = [];
+    document.addEventListener('DOMContentLoaded', function() {
+      const cube = document.getElementById('cube');
+      const showSignupBtn = document.getElementById('show-signup');
+      const showLoginBtn = document.getElementById('show-login');
 
-    for (let i = 0; i < rows; i++) {
-      for (let j = 0; j < cols; j++) {
-        const container = document.createElement('div');
-        container.className = 'hexagon-container';
-        
-        const hexagon = document.createElement('div');
-        hexagon.className = 'hexagon';
-        container.appendChild(hexagon);
-        
-        hexagonBg.appendChild(container);
-        hexagons.push(hexagon);
-      }
-    }
+      showSignupBtn.addEventListener('click', function() {
+        cube.classList.add('show-signup');
+      });
 
-    // Function to get random hexagon
-    function getRandomHexagon() {
-      return hexagons[Math.floor(Math.random() * hexagons.length)];
-    }
-
-    // Function to activate hexagon
-    function activateHexagon(hexagon) {
-      hexagon.classList.add('active');
-      setTimeout(() => {
-        hexagon.classList.remove('active');
-      }, 2000);
-    }
-
-    // Automatic hexagon activation
-    let lastHexagon = null;
-    function autoActivateHexagons() {
-      const newHexagon = getRandomHexagon();
-      
-      if (lastHexagon) {
-        // Create connection effect between hexagons
-        const rect1 = lastHexagon.getBoundingClientRect();
-        const rect2 = newHexagon.getBoundingClientRect();
-        
-        const line = document.createElement('div');
-        line.className = 'hexagon-line';
-        
-        const angle = Math.atan2(
-          rect2.top - rect1.top,
-          rect2.left - rect1.left
-        );
-        const distance = Math.sqrt(
-          Math.pow(rect2.left - rect1.left, 2) +
-          Math.pow(rect2.top - rect1.top, 2)
-        );
-        
-        line.style.width = `${distance}px`;
-        line.style.transform = `rotate(${angle}rad)`;
-        line.style.left = `${rect1.left}px`;
-        line.style.top = `${rect1.top}px`;
-        
-        document.body.appendChild(line);
-        
-        setTimeout(() => {
-          line.style.width = '0';
-          line.style.opacity = '0';
-          setTimeout(() => line.remove(), 500);
-        }, 1500);
-      }
-      
-      activateHexagon(newHexagon);
-      lastHexagon = newHexagon;
-    }
-
-    setInterval(autoActivateHexagons, 2000);
-
-    // Mouse interaction
-    document.addEventListener('mousemove', (e) => {
-      hexagons.forEach(hexagon => {
-        const rect = hexagon.getBoundingClientRect();
-        const x = (rect.left + rect.right) / 2;
-        const y = (rect.top + rect.bottom) / 2;
-        const distance = Math.sqrt(
-          Math.pow(e.clientX - x, 2) + 
-          Math.pow(e.clientY - y, 2)
-        );
-        
-        if (distance < 100) {
-          hexagon.style.transform = `scale(1.1)`;
-          hexagon.style.background = 'var(--hexagon-hover)';
-        } else {
-          hexagon.style.transform = 'scale(1)';
-          hexagon.style.background = 'var(--background-color)';
-        }
+      showLoginBtn.addEventListener('click', function() {
+        cube.classList.remove('show-signup');
       });
     });
-
-    // Flip box function
-    function flip() {
-      document.getElementById("flipBox").classList.toggle("flipped");
-    }
-
-    // Auto-hide messages
-    setTimeout(function() {
-      const messages = document.querySelector('.messages');
-      if (messages) {
-        messages.style.opacity = '0';
-        messages.style.transition = 'opacity 0.5s ease-out';
-        setTimeout(() => messages.remove(), 500);
-      }
-    }, 5000);
   </script>
 </body>
 </html>

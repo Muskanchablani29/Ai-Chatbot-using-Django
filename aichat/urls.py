@@ -16,16 +16,24 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from Chat import views as chat_views
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 HomePage = 'Home'
 
 urlpatterns = [
     path('admin/', admin.site.urls),    
     # path('', views.index, name='index'),
-    path('Chat/',views.Chat, name='chat'),
-    path('Contact/', views.Contact, name='contact'),
+    # path('Chat/', chat_views.Chat, name='chat'),
+    path('Chat/api/', chat_views.gemini_chat_api, name='chat_api'),
     path('', include('Home.urls', namespace='Home')),
     path('About/', include('About.urls', namespace='About')),
     path('Profile/', include('Profile.urls', namespace='Profile')),
+    path('Chat/', include('Chat.urls', namespace='Chat')),
+    path('Explore/', include('Explore.urls', namespace='Explore')),
+    path('Contact/', include('Contact.urls', namespace='Contact')),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

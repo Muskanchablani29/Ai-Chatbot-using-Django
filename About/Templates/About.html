@@ -2,334 +2,784 @@
 {% include "index.html" %}
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About Us | AI Technology</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { primary: "#181717", secondary: "#2A2A2A" },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <style>
+      :where([class^="ri-"])::before { content: "\f3c2"; }
+      body {
+          font-family: 'Inter', sans-serif;
+          background-color: #0F0F0F;
+          color: #E0E0E0;
+      }
+      .gradient-text {
+          background: linear-gradient(90deg, #57B5E7, #8DD3C7);
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+      }
+      .gradient-border {
+          position: relative;
+          border-radius: 8px;
+          background: linear-gradient(to right, #57B5E7, #8DD3C7);
+          padding: 1px;
+      }
+      .gradient-border-content {
+          border-radius: 7px;
+          background: #1A1A1A;
+      }
+      .timeline-item::before {
+          content: '';
+          position: absolute;
+          left: -25px;
+          top: 0;
+          width: 2px;
+          height: 100%;
+          background: linear-gradient(to bottom, #57B5E7, #8DD3C7);
+      }
+      .timeline-item::after {
+          content: '';
+          position: absolute;
+          left: -29px;
+          top: 20px;
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background: #57B5E7;
+      }
+      input:focus, textarea:focus {
+          outline: none;
+          border-color: #57B5E7;
+      }
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+      }
+      .particle-canvas {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 0;
+      }
+
+      {% comment %} form............................. {% endcomment %}
+
+      
+      *,
+      *:after,
+      *:before {
+        box-sizing: border-box;
+      }
+      
+      .light-form {
+        max-width: 1500px;
+        width: 100%;
+        background-color: #0F0F0F;
+        padding: 0 20px;
+        
+      }
+      
+      .light-form__title {
+        font-weight: bold;
+        color: #57B5E7;
+        padding: 20px 0;
+        text-transform: uppercase;
+        font-size: 26px;
+        text-shadow: 2px 2px 2px #000;
+        letter-spacing: 3px;
+        border-color: #57B5E7;
+      }
+      
+      .light-form__wrap {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        position: relative;
+      }
+      
+      .light-form__wrap--center {
+        text-align: center;
+        margin-top: 20px;
+        padding-bottom: 20px;
+      }
+      
+      .light-form__group {
+        position: relative;
+        width: 100%;
+        margin-bottom: 20px;
+      }
+      
+      .light-form__label {
+        position: absolute;
+        color: #fff;
+        font-size: 16px;
+        top: 0;
+        left: 10px;
+        transform: translate(0, 50%);
+        transition: transform 0.4s, font-size 0.4s;
+      }
+      
+      .light-form__label--active {
+        transform: translate(0, -100%);
+        font-size: 14px;
+      }
+      
+      .light-form__control {
+        width: 100;
+        padding: 30px;
+        border: 0;
+        border-bottom: 1px solid #fff;
+        background: transparent;
+        font-family: inherit;
+        font-size: inherit;
+        color: #fff;
+        position: relative;
+        z-index: 10;
+        transition: border-color 0.6s;
+      }
+      
+      .light-form__control:focus {
+        outline: none;
+        border-bottom: 1px solid yellow;
+      }
+      
+      .light-form__control:focus + .light-form__label {
+        transform: translate(0, -100%);
+        font-size: 14px;
+      }
+      
+      .light-form__control--active {
+        outline: none;
+        border-bottom: 1px solid yellow;
+      }
+      
+      .light-form__control--error {
+        outline: none;
+        border-bottom: 1px solid red;
+      }
+      
+      .light-form__control--text {
+      }
+      
+      .light-form__control--textarea {
+        width: 100%;
+        height: 120px;
+        resize: none;
+      }
+      
+      .light-form__btn {
+        border: 1px solid #fff;
+        background: #57B5E7;
+        color: black;
+        padding: 10px 60px;
+        cursor: pointer;
+        font-size: inherit;
+        font-family: inherit;
+        outline: none;
+        transition: color 0.4s, background 0.4s;
+      }
+      
+      .light-form__btn:hover {
+        background: yellow;
+        color: #000;
+      }
+      
+      @media (min-width: 550px) {
+        .light-form__title {
+          font-size: 32px;
+        }
+      
+        .light-form__wrap {
+          margin-bottom: 30px;
+        }
+      
+        .light-form__wrap--center {
+          margin-top: 0;
+        }
+      
+        .light-form__group {
+          width: 48%;
+          margin-bottom: 0;
+        }
+      }
+      
+    </style>
+  </head>
+  <body class="min-h-screen">
+   
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 overflow-hidden">
+      <div
+        class="absolute inset-0 z-0"
+        style="background-image: url('https://readdy.ai/api/search-image?query=abstract%20technology%20background%20with%20blue%20digital%20particles%20and%20network%20connections%2C%20dark%20theme%20with%20glowing%20elements%2C%20futuristic%20AI%20visualization%2C%20clean%20minimalist%20design&width=1920&height=1080&seq=1&orientation=landscape'); background-size: cover; background-position: center; opacity: 0.6;"
+      ></div>
+      <div
+        class="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black opacity-90 z-0"
+      ></div>
+      <canvas id="particleCanvas" class="particle-canvas"></canvas>
+
+      <div class="container mx-auto px-6 relative z-10">
+        <div class="max-w-3xl mx-auto text-center">
+          <h1 class="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+            About Our <span class="gradient-text">AI Technology</span>
+          </h1>
+          <p class="text-xl text-gray-300 mb-10 leading-relaxed">
+            Pioneering the future of artificial intelligence with innovative
+            solutions that transform industries and enhance human potential.
+          </p>
+          <div class="flex justify-center gap-4">
+            
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Mission Section -->
+    <section class="py-20 bg-black">
+      <div class="container mx-auto px-6">
+        <div class="flex flex-col md:flex-row items-center gap-12">
+          <div class="w-full md:w-1/2">
+            <h2 class="text-3xl font-bold mb-6">Our Mission</h2>
+            <p class="text-gray-300 mb-8 leading-relaxed">
+              Our mission is to democratize artificial intelligence and make it
+              accessible to businesses of all sizes. We believe in creating AI
+              solutions that are not only powerful and innovative but also
+              ethical and responsible.
+            </p>
+            <p class="text-gray-300 mb-8 leading-relaxed">
+              We strive to push the boundaries of what's possible with AI while
+              ensuring our technology serves humanity's best interests and
+              addresses real-world challenges.
+            </p>
+
+            <div class="grid grid-cols-2 gap-6 mt-10">
+              <div class="flex flex-col items-center text-center">
+                <div
+                  class="w-16 h-16 flex items-center justify-center bg-primary bg-opacity-20 rounded-full mb-4"
+                >
+                  <i class="ri-code-box-line ri-xl text-primary"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-1">250+</h3>
+                <p class="text-gray-400">AI Models Deployed</p>
+              </div>
+              <div class="flex flex-col items-center text-center">
+                <div
+                  class="w-16 h-16 flex items-center justify-center bg-primary bg-opacity-20 rounded-full mb-4"
+                >
+                  <i class="ri-building-line ri-xl text-primary"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-1">500+</h3>
+                <p class="text-gray-400">Enterprise Clients</p>
+              </div>
+              <div class="flex flex-col items-center text-center">
+                <div
+                  class="w-16 h-16 flex items-center justify-center bg-primary bg-opacity-20 rounded-full mb-4"
+                >
+                  <i class="ri-global-line ri-xl text-primary"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-1">42</h3>
+                <p class="text-gray-400">Countries Served</p>
+              </div>
+              <div class="flex flex-col items-center text-center">
+                <div
+                  class="w-16 h-16 flex items-center justify-center bg-primary bg-opacity-20 rounded-full mb-4"
+                >
+                  <i class="ri-user-smile-line ri-xl text-primary"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-1">10M+</h3>
+                <p class="text-gray-400">End Users</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="w-full md:w-1/2">
+            <div class="rounded-lg overflow-hidden">
+              <img
+                src="https://readdy.ai/api/search-image?query=futuristic%20AI%20research%20lab%20with%20scientists%20working%20on%20advanced%20technology%2C%20dark%20theme%20with%20blue%20glowing%20screens%20and%20holographic%20displays%2C%20clean%20minimalist%20design%2C%20professional%20setting&width=800&height=600&seq=2&orientation=landscape"
+                alt="Our Mission"
+                class="w-full h-auto object-cover rounded-lg"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core Values -->
+    <section class="py-20 bg-[#0A0A0A]">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl font-bold mb-4">Our Core Values</h2>
+          <p class="text-gray-300 max-w-2xl mx-auto">
+            These principles guide our approach to AI development and shape our
+            company culture.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div
+            class="gradient-border transform hover:scale-105 transition-transform duration-300"
+          >
+            <div class="gradient-border-content p-6">
+              <div
+                class="w-14 h-14 flex items-center justify-center bg-primary bg-opacity-20 rounded-full mb-6"
+              >
+                <i class="ri-lightbulb-line ri-xl text-primary"></i>
+              </div>
+              <h3 class="text-xl font-bold mb-3">Innovation</h3>
+              <p class="text-gray-400">
+                We constantly push the boundaries of what's possible with AI,
+                exploring new approaches and technologies.
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="gradient-border transform hover:scale-105 transition-transform duration-300"
+          >
+            <div class="gradient-border-content p-6">
+              <div
+                class="w-14 h-14 flex items-center justify-center bg-primary bg-opacity-20 rounded-full mb-6"
+              >
+                <i class="ri-shield-check-line ri-xl text-primary"></i>
+              </div>
+              <h3 class="text-xl font-bold mb-3">Ethics</h3>
+              <p class="text-gray-400">
+                We develop AI responsibly, prioritizing fairness, transparency,
+                and the well-being of all stakeholders.
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="gradient-border transform hover:scale-105 transition-transform duration-300"
+          >
+            <div class="gradient-border-content p-6">
+              <div
+                class="w-14 h-14 flex items-center justify-center bg-primary bg-opacity-20 rounded-full mb-6"
+              >
+                <i class="ri-team-line ri-xl text-primary"></i>
+              </div>
+              <h3 class="text-xl font-bold mb-3">Collaboration</h3>
+              <p class="text-gray-400">
+                We believe in the power of diverse teams working together to
+                solve complex problems.
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="gradient-border transform hover:scale-105 transition-transform duration-300"
+          >
+            <div class="gradient-border-content p-6">
+              <div
+                class="w-14 h-14 flex items-center justify-center bg-primary bg-opacity-20 rounded-full mb-6"
+              >
+                <i class="ri-customer-service-line ri-xl text-primary"></i>
+              </div>
+              <h3 class="text-xl font-bold mb-3">Impact</h3>
+              <p class="text-gray-400">
+                We measure our success by the positive difference our technology
+                makes in the world.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+    <div class="light-form">
+        <div class="light-form__title">Feedback form</div>
+        <form action="">
+          <div class="light-form__wrap">
+            <div class="light-form__group">
+              <input class="light-form__control light-form__control--text" type="text" required/>
+              <label class="light-form__label">You name:</label>
+            </div>
+            <div class="light-form__group">
+              <input class="light-form__control light-form__control--text" type="text" required/>
+              <label class="light-form__label">Phone number:</label>
+            </div>
+          </div>
+          <div class="light-form__wrap">
+            <textarea class="light-form__control light-form__control--textarea"></textarea>
+            <label class="light-form__label">Message:</label>
+          </div>
+          <div class="light-form__wrap--center">
+            <input class="light-form__btn" type="submit" value="Send"/>
+          </div>
+        </form>
+      </div>
+
+    <!-- Technology Stack -->
+    <section class="py-20 bg-black">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl font-bold mb-4">Our Technology Stack</h2>
+          <p class="text-gray-300 max-w-2xl mx-auto">
+            We leverage cutting-edge technologies to build our AI solutions.
+          </p>
+        </div>
+
+        <div
+          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8"
+        >
+          <div
+            class="flex flex-col items-center text-center transform hover:scale-110 transition-transform duration-300"
+          >
+            <div class="w-16 h-16 flex items-center justify-center mb-4">
+              <i
+                class="ri-tensorflow-fill ri-3x text-gray-400 hover:text-primary transition-colors duration-300"
+              ></i>
+            </div>
+            <p class="text-gray-300">TensorFlow</p>
+          </div>
+
+          <div
+            class="flex flex-col items-center text-center transform hover:scale-110 transition-transform duration-300"
+          >
+            <div class="w-16 h-16 flex items-center justify-center mb-4">
+              <i
+                class="ri-pytorch-fill ri-3x text-gray-400 hover:text-primary transition-colors duration-300"
+              ></i>
+            </div>
+            <p class="text-gray-300">PyTorch</p>
+          </div>
+
+          <div
+            class="flex flex-col items-center text-center transform hover:scale-110 transition-transform duration-300"
+          >
+            <div class="w-16 h-16 flex items-center justify-center mb-4">
+              <i
+                class="ri-python-fill ri-3x text-gray-400 hover:text-primary transition-colors duration-300"
+              ></i>
+            </div>
+            <p class="text-gray-300">Python</p>
+          </div>
+
+          <div
+            class="flex flex-col items-center text-center transform hover:scale-110 transition-transform duration-300"
+          >
+            <div class="w-16 h-16 flex items-center justify-center mb-4">
+              <i
+                class="ri-reactjs-fill ri-3x text-gray-400 hover:text-primary transition-colors duration-300"
+              ></i>
+            </div>
+            <p class="text-gray-300">React</p>
+          </div>
+
+          <div
+            class="flex flex-col items-center text-center transform hover:scale-110 transition-transform duration-300"
+          >
+            <div class="w-16 h-16 flex items-center justify-center mb-4">
+              <i
+                class="ri-aws-fill ri-3x text-gray-400 hover:text-primary transition-colors duration-300"
+              ></i>
+            </div>
+            <p class="text-gray-300">AWS</p>
+          </div>
+
+          <div
+            class="flex flex-col items-center text-center transform hover:scale-110 transition-transform duration-300"
+          >
+            <div class="w-16 h-16 flex items-center justify-center mb-4">
+              <i
+                class="ri-database-2-fill ri-3x text-gray-400 hover:text-primary transition-colors duration-300"
+              ></i>
+            </div>
+            <p class="text-gray-300">MongoDB</p>
+          </div>
+
+          <div
+            class="flex flex-col items-center text-center transform hover:scale-110 transition-transform duration-300"
+          >
+            <div class="w-16 h-16 flex items-center justify-center mb-4">
+              <i
+                class="ri-google-cloud-fill ri-3x text-gray-400 hover:text-primary transition-colors duration-300"
+              ></i>
+            </div>
+            <p class="text-gray-300">Google Cloud</p>
+          </div>
+
+          <div
+            class="flex flex-col items-center text-center transform hover:scale-110 transition-transform duration-300"
+          >
+            <div class="w-16 h-16 flex items-center justify-center mb-4">
+              <i
+                class="ri-kubernetes-fill ri-3x text-gray-400 hover:text-primary transition-colors duration-300"
+              ></i>
+            </div>
+            <p class="text-gray-300">Kubernetes</p>
+          </div>
+
+          <div
+            class="flex flex-col items-center text-center transform hover:scale-110 transition-transform duration-300"
+          >
+            <div class="w-16 h-16 flex items-center justify-center mb-4">
+              <i
+                class="ri-docker-fill ri-3x text-gray-400 hover:text-primary transition-colors duration-300"
+              ></i>
+            </div>
+            <p class="text-gray-300">Docker</p>
+          </div>
+
+          <div
+            class="flex flex-col items-center text-center transform hover:scale-110 transition-transform duration-300"
+          >
+            <div class="w-16 h-16 flex items-center justify-center mb-4">
+              <i
+                class="ri-github-fill ri-3x text-gray-400 hover:text-primary transition-colors duration-300"
+              ></i>
+            </div>
+            <p class="text-gray-300">GitHub</p>
+          </div>
+
+          <div
+            class="flex flex-col items-center text-center transform hover:scale-110 transition-transform duration-300"
+          >
+            <div class="w-16 h-16 flex items-center justify-center mb-4">
+              <i
+                class="ri-flutter-fill ri-3x text-gray-400 hover:text-primary transition-colors duration-300"
+              ></i>
+            </div>
+            <p class="text-gray-300">Flutter</p>
+          </div>
+
+          <div
+            class="flex flex-col items-center text-center transform hover:scale-110 transition-transform duration-300"
+          >
+            <div class="w-16 h-16 flex items-center justify-center mb-4">
+              <i
+                class="ri-nodejs-fill ri-3x text-gray-400 hover:text-primary transition-colors duration-300"
+              ></i>
+            </div>
+            <p class="text-gray-300">Node.js</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Particle animation for hero section
+        const canvas = document.getElementById("particleCanvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        const particleCount = 100;
+
+        class Particle {
+          constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 2 + 0.5;
+            this.speedX = Math.random() * 1 - 0.5;
+            this.speedY = Math.random() * 1 - 0.5;
+            this.color = "#57B5E7";
+            this.alpha = Math.random() * 0.5 + 0.1;
+          }
+
+          update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+
+            if (this.x > canvas.width) this.x = 0;
+            else if (this.x < 0) this.x = canvas.width;
+
+            if (this.y > canvas.height) this.y = 0;
+            else if (this.y < 0) this.y = canvas.height;
+          }
+
+          draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.globalAlpha = this.alpha;
+            ctx.fill();
+          }
+        }
+
+        function init() {
+          for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+          }
+        }
+
+        function animate() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw();
+
+            // Connect particles with lines
+            for (let j = i; j < particles.length; j++) {
+              const dx = particles[i].x - particles[j].x;
+              const dy = particles[i].y - particles[j].y;
+              const distance = Math.sqrt(dx * dx + dy * dy);
+
+              if (distance < 100) {
+                ctx.beginPath();
+                ctx.strokeStyle = "#57B5E7";
+                ctx.globalAlpha = 0.1 * (1 - distance / 100);
+                ctx.lineWidth = 0.5;
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.stroke();
+              }
+            }
+          }
+
+          requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+
+        window.addEventListener("resize", function () {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        });
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Scroll animation for timeline items
+        const timelineItems = document.querySelectorAll(".timeline-item");
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.style.opacity = 1;
+                entry.target.style.transform = "translateY(0)";
+              }
+            });
+          },
+          { threshold: 0.1 },
+        );
+
+        timelineItems.forEach((item) => {
+          item.style.opacity = 0;
+          item.style.transform = "translateY(20px)";
+          item.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+          observer.observe(item);
+        });
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+          anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            const targetId = this.getAttribute("href");
+            if (targetId === "#") return;
+
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+              window.scrollTo({
+                top: targetElement.offsetTop - 100,
+                behavior: "smooth",
+              });
+            }
+          });
+        });
+      });
+
+      {% comment %} form..................... {% endcomment %}
+
+      var form = document.querySelector('.light-form');
+var btn = document.querySelector('.light-form__btn');
+var requiredInputs = Array.prototype.slice.call(form.querySelectorAll('.light-form__control[required]'));
+
+form.addEventListener('input', function(e) {
+  var thisInput = e.target;
+  var parent = thisInput.nextElementSibling;
+  
+  if(thisInput.value.trim() !== '') {
+    thisInput.classList.add('light-form__control--active');
+    parent.classList.add('light-form__label--active');
+  }
+  else {
+    thisInput.classList.remove('light-form__control--active');
+    parent.classList.remove('light-form__label--active');
+  }
+});
+
+btn.addEventListener('click', function(e) {
+    
+  requiredInputs.forEach(function(ear){    
+    if(ear.value.trim() === '') {
+      e.preventDefault();
+      ear.classList.add('light-form__control--error');
+    }
+    else {
+      ear.classList.remove('light-form__control--error');
+    }
+  })
+});
+
+    </script>
+  </body>
+</html>
+
+{% comment %} {% load static %}
+{% include "index.html" %}
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About - AI Chatbot</title>
-
-    <!-- Lottie Animation Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
-    
-    <style>
-        :root {
-            --color-primary: #00ffff;
-            --color-secondary: #ff00ff;
-            --color-background: #000000;
-            --color-text: #ffffff;
-            --glow-effect: 0 0 20px rgba(0, 255, 255, 0.5);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background-color: var(--color-background);
-            color: var(--color-text);
-            font-family: 'Segoe UI', Arial, sans-serif;
-            line-height: 1.6;
-            overflow-x: hidden;
-            margin-top: 80px;
-            min-height: 100vh;
-        }
-
-        /* Robot Animation Container */
-        #robot-container {
-            position: fixed;
-            left: 50px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 400px;
-            height: 400px;
-            z-index: 10;
-            pointer-events: none;
-            filter: drop-shadow(0 0 15px var(--color-primary));
-            transition: all 0.6s cubic-bezier(0.68, -0.6, 0.32, 1.6);
-        }
-
-        /* Robot Jump Animation Classes */
-        #robot-container.jump {
-            animation: jumpTransition 0.8s cubic-bezier(0.68, -0.6, 0.32, 1.6);
-        }
-
-        #robot-container.jump-reverse {
-            animation: jumpTransitionReverse 0.8s cubic-bezier(0.68, -0.6, 0.32, 1.6);
-        }
-
-        @keyframes jumpTransition {
-            0% { transform: translateY(-50%) scale(1); }
-            50% { transform: translateY(-150%) scale(1.2); }
-            100% { transform: translateY(-50%) scale(1); }
-        }
-
-        @keyframes jumpTransitionReverse {
-            0% { transform: translateY(-50%) scaleX(-1) scale(1); }
-            50% { transform: translateY(-150%) scaleX(-1) scale(1.2); }
-            100% { transform: translateY(-50%) scaleX(-1) scale(1); }
-        }
-
-        /* Section Styles */
-        .section {
-            min-height: 100vh;
-            padding: 4rem 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-            background-color: var(--color-background);
-            z-index: 1;
-        }
-
-        .content {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 3rem;
-            background: rgba(0, 0, 0, 0.8);
-            border: 2px solid rgba(0, 255, 255, 0.2);
-            border-radius: 20px;
-            box-shadow: 0 0 40px rgba(0, 255, 255, 0.15);
-            backdrop-filter: blur(15px);
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease;
-            position: relative;
-            z-index: 2;
-        }
-
-        .content.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .section:first-child .content {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        h1 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            color: var(--color-primary);
-            margin-bottom: 2rem;
-            text-shadow: var(--glow-effect);
-            text-align: center;
-        }
-
-        h2 {
-            font-size: clamp(1.5rem, 3vw, 2rem);
-            color: var(--color-secondary);
-            margin: 1.5rem 0;
-            text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
-        }
-
-        p {
-            font-size: clamp(1.1rem, 2vw, 1.3rem);
-            color: #e0e0e0;
-            margin-bottom: 1.5rem;
-            line-height: 1.8;
-        }
-
-        .feature-list {
-            list-style: none;
-            margin: 1.5rem 0;
-        }
-
-        .feature-list li {
-            font-size: clamp(1rem, 1.8vw, 1.2rem);
-            color: #cccccc;
-            margin: 1rem 0;
-            padding-left: 2rem;
-            position: relative;
-        }
-
-        .feature-list li::before {
-            content: '→';
-            color: var(--color-primary);
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        /* Section-specific content positioning */
-        .section:nth-child(1) .content { margin-left: 35%; }
-        .section:nth-child(2) .content { margin-right: 35%; }
-        .section:nth-child(3) .content { margin-left: 35%; }
-
-        @media (max-width: 1400px) {
-            #robot-container {
-                width: 300px;
-                height: 300px;
-            }
-            .section .content {
-                margin-left: auto !important;
-                margin-right: auto !important;
-                max-width: 800px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            #robot-container {
-                width: 200px;
-                height: 200px;
-            }
-            .content {
-                padding: 2rem;
-            }
-        }
-    </style>
+    <title>Document</title>
 </head>
 <body>
-    <!-- Robot Animation Container -->
-    <div id="robot-container"></div>
-
-    <main>
-        <section class="section" id="section1">
-            <div class="content">
-                <h1>Welcome to AI Chatbot</h1>
-                <p>Discover the next generation of conversational AI with our cutting-edge chatbot platform. We've combined advanced machine learning with intuitive design to create an AI assistant that truly understands and adapts to your needs.</p>
-                
-                <h2>Why Choose Our AI Chatbot?</h2>
-                <ul class="feature-list">
-                    <li>State-of-the-art Natural Language Processing for human-like interactions</li>
-                    <li>Instant responses available 24/7 with zero downtime</li>
-                    <li>Advanced learning algorithms that improve with each conversation</li>
-                    <li>Support for over 50 languages with real-time translation</li>
-                </ul>
-            </div>
-        </section>
-
-        <section class="section" id="section2">
-            <div class="content">
-                <h1>Intelligent Interaction</h1>
-                <p>Experience the future of communication with our AI-powered conversational platform. Our chatbot leverages the latest advancements in artificial intelligence to deliver personalized, context-aware interactions.</p>
-                
-                <h2>Advanced Capabilities</h2>
-                <ul class="feature-list">
-                    <li>Deep learning algorithms for natural conversation flow</li>
-                    <li>Advanced sentiment analysis and emotional intelligence</li>
-                    <li>Dynamic personality adaptation based on user preferences</li>
-                    <li>Multi-platform support across web, mobile, and desktop</li>
-                </ul>
-                
-                <p>Our AI chatbot goes beyond simple responses, offering intelligent solutions and maintaining engaging conversations that feel natural and purposeful.</p>
-            </div>
-        </section>
-
-        <section class="section" id="section3">
-            <div class="content">
-                <h1>Future Innovation</h1>
-                <p>We're pioneering the future of AI-human interaction, pushing the boundaries of what's possible in conversational technology. Our commitment to innovation drives continuous improvements and breakthrough features.</p>
-                
-                <h2>Tomorrow's Technology Today</h2>
-                <ul class="feature-list">
-                    <li>Neural network-based decision making capabilities</li>
-                    <li>Predictive response system using behavioral analysis</li>
-                    <li>Seamless IoT and smart device integration</li>
-                    <li>Regular feature updates and capability expansions</li>
-                    <li>Community-driven development and customization</li>
-                </ul>
-                
-                <p>Join us in shaping the future of AI communication. Experience a chatbot that doesn't just respond, but understands, learns, and evolves with every interaction.</p>
-            </div>
-        </section>
-    </main>
-
-    <script>
-        // Initialize Lottie Animation
-        const robotAnimation = lottie.loadAnimation({
-            container: document.getElementById('robot-container'),
-            renderer: 'svg',
-            loop: true,
-            autoplay: true,
-            path: '{% static 'Animation.json' %}'
-        });
-
-        // Robot position and movement logic
-        const robotContainer = document.getElementById('robot-container');
-        const sections = document.querySelectorAll('.section');
-        let currentSection = 0;
-        let isReverse = false;
-
-        // Initial robot position
-        function setInitialRobotPosition() {
-            robotContainer.style.left = '50px';
-            robotContainer.style.top = '50%';
-            robotContainer.style.transform = 'translateY(-50%)';
-        }
-
-        // Intersection Observer for sections
-        const observerOptions = {
-            root: null,
-            threshold: 0.5,
-            rootMargin: '0px'
-        };
-
-        const sectionObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    // Make content visible
-                    entry.target.querySelector('.content').classList.add('visible');
-                    
-                    // Update robot position
-                    const sectionIndex = Array.from(sections).indexOf(entry.target);
-                    moveRobot(sectionIndex);
-                    
-                    // Update current section
-                    currentSection = sectionIndex;
-                }
-            });
-        }, observerOptions);
-
-        // Observe all sections
-        sections.forEach(section => {
-            sectionObserver.observe(section);
-        });
-
-        // Robot movement function
-        function moveRobot(sectionIndex) {
-            const newIsReverse = sectionIndex % 2 === 1;
-            
-            // Remove previous animation classes
-            robotContainer.classList.remove('jump', 'jump-reverse');
-            
-            // Add new animation class
-            if (newIsReverse) {
-                robotContainer.classList.add('jump-reverse');
-                robotContainer.style.left = 'calc(100% - 450px)';
-            } else {
-                robotContainer.classList.add('jump');
-                robotContainer.style.left = '50px';
-            }
-            
-            isReverse = newIsReverse;
-        }
-
-        // Initialize robot position
-        setInitialRobotPosition();
-
-        // Scroll event listener for smooth transitions
-        let lastScrollTop = 0;
-        window.addEventListener('scroll', () => {
-            const st = window.pageYOffset || document.documentElement.scrollTop;
-            if (st > lastScrollTop) {
-                // Scrolling down
-                if (currentSection < sections.length - 1) {
-                    moveRobot(currentSection + 1);
-                }
-            } else {
-                // Scrolling up
-                if (currentSection > 0) {
-                    moveRobot(currentSection - 1);
-                }
-            }
-            lastScrollTop = st <= 0 ? 0 : st;
-        });
-
-        // Make first section visible immediately
-        document.querySelector('.section:first-child .content').classList.add('visible');
-    </script>
+    {% include "Aboutone.html" %}
+    {% include "Abouttwo.html" %}
+    {% include "Aboutthree.html" %}
 </body>
-</html>
+</html> {% endcomment %}

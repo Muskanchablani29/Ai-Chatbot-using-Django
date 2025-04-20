@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Explore AI - Intro Page</title>
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+  <style>
+    .explore-one {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #000;
+      color: #fff;
+      height: 80vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      {% comment %} overflow: hidden; {% endcomment %}
+    }
+
+    .spotlight {
+      position: absolute;
+      top: 0;
+      width: 80%;
+      height: 80vh;
+      background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.28) 0%, rgb(0, 0, 0) 70%);
+      opacity: 0;
+      animation: fadeLight 4s ease-in-out infinite;
+    }
+
+    @keyframes fadeLight {
+      0% { opacity: 0; transform: scale(0.95); }
+      50% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0.95); }
+    }
+
+    .content-explore {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 600px; /* Reduced from 900px */
+      padding: 20px;
+      background: transparent;
+      {% comment %} border-radius: 20px; {% endcomment %}
+      backdrop-filter: blur(10px);
+      {% comment %} box-shadow: 0 0 20px rgba(255, 255, 255, 0.1); {% endcomment %}
+      {% comment %} animation: float 6s ease-in-out infinite; {% endcomment %}
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0px); }
+    }
+
+    .content-explore h1 {
+      font-size: 2.8rem; /* Reduced from 3.5rem */
+      font-weight: bold;
+      margin-bottom: 10px;
+      background: linear-gradient(to right, #ffffff, #cccccc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      {% comment %} animation: shimmer 3s infinite; {% endcomment %}
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .content-explore p {
+      font-size: 1rem; /* Reduced from 1.2rem */
+      color: #aaa;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .buttons-explore {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .buttons-explore button {
+      padding: 10px 24px; /* Reduced padding */
+      font-size: 0.9rem; /* Reduced font size */
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .buttons-explore .try {
+      background: #fff;
+      color: #000;
+    }
+
+    .buttons-explore .try:hover {
+      background: #ccc;
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+    }
+
+    .buttons-explore .learn {
+      background: #1c1c1c;
+      color: #fff;
+      border: 1px solid #444;
+    }
+
+    .buttons-explore .learn:hover {
+      background: #333;
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Button pulse effect */
+    .buttons-explore button::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .buttons-explore button:hover::after {
+      width: 200px;
+      height: 200px;
+      opacity: 0;
+    }
+
+    @keyframes rise {
+      0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+      }
+      50% {
+        opacity: 0.3;
+      }
+      100% {
+        transform: translateY(-100vh) scale(1);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+    <div class="explore-one">
+  <div class="spotlight"></div>
+
+  <div class="content-explore">
+    <h1>Explore Our AI Assistant</h1>
+    <p>Get help with code fixing & generation, study material support, and mental wellness guidance.</p>
+    <div class="buttons-explore">
+      <button class="try">Try Now</button>
+      <button class="learn">Learn More</button>
+    </div>
+  </div>
+</div>
+
+  <script>
+    // GSAP Animations
+    gsap.from(".content-explore", {
+      opacity: 0,
+      y: 100,
+      duration: 1.5,
+      ease: "power4.out"
+    });
+
+    gsap.from(".content-explore h1", {
+      opacity: 0,
+      y: -50,
+      duration: 1,
+      delay: 0.5,
+      ease: "back.out(1.7)"
+    });
+
+    gsap.from(".content-explore p", {
+      opacity: 0,
+      y: 30,
+      duration: 1,
+      delay: 1,
+      ease: "power2.out"
+    });
+
+    gsap.from(".buttons-explore button", {
+      opacity: 0,
+      scale: 0.5,
+      duration: 0.8,
+      delay: 1.5,
+      ease: "elastic.out(1, 0.3)",
+      stagger: 0.2
+    });
+
+    
+  </script>
+</body>
+</html>

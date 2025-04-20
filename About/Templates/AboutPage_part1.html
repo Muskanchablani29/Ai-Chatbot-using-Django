@@ -1,0 +1,563 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About Us - AI Chatbot</title>
+    <style>
+        :root {
+            --primary-color: #00f0ff;
+            --secondary-color: #ff00ff;
+            --bg-color: #000810;
+            --text-color: #fff;
+            --glow-shadow: 0 0 20px var(--primary-color);
+            --hologram-color: rgba(0, 240, 255, 0.15);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            overflow: hidden;
+            perspective: 1000px;
+            height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Enhanced intro text with glitch effect */
+        .intro-text {
+            position: absolute;
+            top: 10%; 
+            left: 10%;
+            z-index: 50;
+            max-width: 600px;
+        }
+
+        .intro-text h1 {
+            font-size: clamp(2.5em, 5vw, 4em);
+            margin: 0;
+            color: var(--primary-color);
+            text-shadow: var(--glow-shadow);
+            position: relative;
+            animation: glitchText 5s infinite;
+        }
+
+        .intro-text p {
+            font-size: clamp(1.1em, 3vw, 1.3em);
+            color: #a0f0ff;
+            text-shadow: 0 0 8px var(--primary-color);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease forwards 0.5s;
+        }
+
+        /* Laptop and Screen */
+        .laptop-container {
+            position: absolute;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(800px, 90vw);
+            height: 600px;
+            perspective: 1000px;
+            z-index: 10;
+        }
+
+        .laptop {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            animation: laptopFloat 6s ease-in-out infinite;
+        }
+
+        /* Removed laptop-screen styles */
+
+        /* New laptop typing with hands images */
+        .laptop-typing {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 600px; /* Increased width */
+            height: 300px;
+            transform: translateX(-50%);
+            z-index: 15;
+            background: transparent;
+        }
+
+        .laptop-typing img {
+            position: absolute;
+            max-width: 100%;
+            height: auto;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .laptop-typing .laptop-image {
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: auto;
+        }
+
+        .laptop-typing .hands-image {
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: auto;
+            animation: handsTyping 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes handsTyping {
+            0% { transform: translateX(-50%) translateY(0); }
+            100% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        .laptop-keyboard {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 100%;
+            height: 20px;
+            background: linear-gradient(45deg, #1a1a1a, #2a2a2a);
+            border: 2px solid var(--primary-color);
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        }
+
+        /* Holographic Elements */
+        .holo-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            perspective: 1000px;
+        }
+
+        /* Light beam from laptop typing */
+        .light-beam {
+            position: absolute;
+            bottom: 300px;
+            left: 50%;
+            width: 120px;
+            height: 250px;
+            background: radial-gradient(ellipse at center, rgba(0, 240, 255, 0.5) 0%, transparent 80%);
+            filter: blur(20px);
+            transform: translateX(-50%) rotateX(75deg);
+            animation: lightBeamPulse 3s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* AI Interface Card */
+        .ai-interface-card {
+            position: absolute;
+            bottom: 550px;
+            left: 50%;
+            width: 200px;
+            height: 140px;
+            background: rgba(0, 240, 255, 0.25);
+            border: 2px solid var(--primary-color);
+            border-radius: 20px;
+            box-shadow: 0 0 40px var(--primary-color);
+            backdrop-filter: blur(15px);
+            transform: translateX(-50%) translateY(50px);
+            opacity: 0;
+            transition: transform 1s ease, opacity 1s ease;
+            z-index: 20;
+        }
+
+        .ai-interface-card.visible {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Floating icon cards container */
+        .floating-icons-container {
+            position: absolute;
+            bottom: 480px;
+            left: 50%;
+            width: 400px;
+            height: 200px;
+            transform: translateX(-50%);
+            z-index: 18;
+        }
+
+        .floating-icon {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: var(--hologram-color);
+            border: 1px solid var(--primary-color);
+            border-radius: 15px;
+            padding: 10px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 15px var(--primary-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 24px;
+            cursor: default;
+            user-select: none;
+            opacity: 0;
+            transition: transform 0.6s ease, opacity 0.6s ease;
+        }
+
+        .floating-icon:nth-child(1) {
+            top: 20px;
+            left: 10px;
+        }
+
+        .floating-icon:nth-child(2) {
+            top: 40px;
+            left: 100px;
+        }
+
+        .floating-icon:nth-child(3) {
+            top: 10px;
+            left: 190px;
+        }
+
+        .floating-icon:nth-child(4) {
+            top: 100px;
+            left: 50px;
+        }
+
+        .floating-icon:nth-child(5) {
+            top: 110px;
+            left: 150px;
+        }
+
+        .floating-icon:nth-child(6) {
+            top: 70px;
+            left: 280px;
+        }
+
+        /* Animations for icons coming out and going in */
+        @keyframes iconOut {
+            0% {
+                transform: translateY(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-60px);
+                opacity: 1;
+            }
+        }
+
+        @keyframes iconIn {
+            0% {
+                transform: translateY(-60px);
+                opacity: 1;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 0;
+            }
+        }
+
+        /* Animations */
+        @keyframes laptopFloat {
+            0%, 100% { 
+                transform: translateY(0) rotate3d(1, 0, 0, 10deg); 
+            }
+            50% { 
+                transform: translateY(-20px) rotate3d(1, 0, 0, 15deg); 
+            }
+        }
+
+        /* Removed screenOpen animation */
+
+
+        @keyframes holoFloat {
+            0%, 100% { 
+                transform: translate3d(0, 0, 0); 
+                opacity: 0.8; 
+            }
+            50% { 
+                transform: translate3d(0, -20px, 20px); 
+                opacity: 1; 
+            }
+        }
+
+        @keyframes glitchText {
+            0% { transform: skew(0deg); }
+            20% { transform: skew(-2deg); filter: hue-rotate(0deg); }
+            21% { transform: skew(2deg); filter: hue-rotate(90deg); }
+            22% { transform: skew(-2deg); filter: hue-rotate(0deg); }
+            23% { transform: skew(0deg); }
+            100% { transform: skew(0deg); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .intro-text {
+                left: 5%;
+                right: 5%;
+                text-align: center;
+            }
+
+            .laptop-container {
+                bottom: -50px;
+                height: 400px;
+            }
+
+            .holo-element {
+                transform: scale(0.8);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <canvas id="particleCanvas"></canvas>
+        <div class="intro-text">
+            <h1>Welcome to Our AI Chatbot</h1>
+            <p>Experience the future of conversation through advanced artificial intelligence and deep learning technology.</p>
+        </div>
+        
+        <div class="laptop-container">
+            <div class="laptop">
+                <div class="laptop-typing">
+                    <img src="{% static 'images/Laptop.png' %}" alt="Laptop" class="laptop-image" />    
+                </div>
+                <div class="laptop-keyboard">
+                    <div class="light-beam"></div>
+                </div>
+            </div>
+            <div class="ai-interface-card" id="aiInterfaceCard"></div>
+            <div class="floating-icons-container" id="floatingIconsContainer">
+                <div class="floating-icon" title="AI Core">🤖</div>
+                <div class="floating-icon" title="Cloud Computing">☁️</div>
+                <div class="floating-icon" title="Analytics">📊</div>
+                <div class="floating-icon" title="Security">🔒</div>
+                <div class="floating-icon" title="User Profile">👤</div>
+                <div class="floating-icon" title="Processing">🔄</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        class ParticleSystem {
+            constructor() {
+                this.canvas = document.getElementById('particleCanvas');
+                this.ctx = this.canvas.getContext('2d', { alpha: false });
+                this.particles = [];
+                this.mousePosition = { x: 0, y: 0 };
+                this.lastTime = 0;
+                this.FPS = 30;
+                this.frameDelay = 1000 / this.FPS;
+                this.init();
+            }
+
+            init() {
+                this.resize();
+                this.createParticles();
+                this.bindEvents();
+                this.animate(0);
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                this.width = this.canvas.width;
+                this.height = this.canvas.height;
+            }
+
+            createParticles() {
+                const particleCount = Math.floor((this.width * this.height) / 25000);
+                this.particles = [];
+                for (let i = 0; i < particleCount; i++) {
+                    this.particles.push({
+                        x: Math.random() * this.width,
+                        y: Math.random() * this.height,
+                        size: Math.random() * 1.5 + 1,
+                        speedX: (Math.random() - 0.5) * 0.8,
+                        speedY: (Math.random() - 0.5) * 0.8,
+                        color: `hsla(${180 + Math.random() * 60}, 100%, 70%, 0.8)`
+                    });
+                }
+            }
+
+            bindEvents() {
+                window.addEventListener('resize', () => {
+                    this.resize();
+                    this.createParticles();
+                }, { passive: true });
+
+                window.addEventListener('mousemove', (e) => {
+                    this.mousePosition.x = e.clientX;
+                    this.mousePosition.y = e.clientY;
+                }, { passive: true });
+            }
+
+            animate(currentTime) {
+                requestAnimationFrame((time) => this.animate(time));
+
+                const deltaTime = currentTime - this.lastTime;
+                if (deltaTime < this.frameDelay) return;
+                this.lastTime = currentTime;
+
+                this.ctx.fillStyle = 'rgba(0, 8, 16, 0.15)';
+                this.ctx.fillRect(0, 0, this.width, this.height);
+
+                for (let i = 0; i < this.particles.length; i++) {
+                    const particle = this.particles[i];
+
+                    particle.x += particle.speedX;
+                    particle.y += particle.speedY;
+
+                    if (particle.x < 0) particle.x = this.width;
+                    if (particle.x > this.width) particle.x = 0;
+                    if (particle.y < 0) particle.y = this.height;
+                    if (particle.y > this.height) particle.y = 0;
+
+                    const dxMouse = this.mousePosition.x - particle.x;
+                    const dyMouse = this.mousePosition.y - particle.y;
+                    const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+
+                    if (distMouse < 100) {
+                        const angle = Math.atan2(dyMouse, dxMouse);
+                        const force = (100 - distMouse) / 100;
+                        particle.speedX -= Math.cos(angle) * force * 0.15;
+                        particle.speedY -= Math.sin(angle) * force * 0.15;
+                    }
+
+                    for (let j = i + 1; j < this.particles.length; j++) {
+                        const other = this.particles[j];
+                        const dx = particle.x - other.x;
+                        const dy = particle.y - other.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        const minDist = particle.size + other.size;
+
+                        if (dist < minDist && dist > 0) {
+                            const angle = Math.atan2(dy, dx);
+                            const overlap = minDist - dist;
+                            const moveX = Math.cos(angle) * overlap * 0.5;
+                            const moveY = Math.sin(angle) * overlap * 0.5;
+
+                            particle.x += moveX;
+                            particle.y += moveY;
+                            other.x -= moveX;
+                            other.y -= moveY;
+                        }
+                    }
+
+                    this.ctx.beginPath();
+                    this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                    this.ctx.fillStyle = particle.color;
+                    this.ctx.fill();
+
+                    for (let j = i + 1; j < this.particles.length; j++) {
+                        const other = this.particles[j];
+                        const dx = particle.x - other.x;
+                        const dy = particle.y - other.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+
+                        if (dist < 100) {
+                            this.ctx.beginPath();
+                            this.ctx.strokeStyle = `rgba(0, 240, 255, ${0.15 * (1 - dist / 100)})`;
+                            this.ctx.lineWidth = 0.5;
+                            this.ctx.moveTo(particle.x, particle.y);
+                            this.ctx.lineTo(other.x, other.y);
+                            this.ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            cleanup() {
+                window.removeEventListener('resize', this.resize);
+                window.removeEventListener('mousemove', this.bindEvents);
+            }
+        }
+
+        class HolographicUI {
+            constructor() {
+                this.container = document.getElementById('floatingIconsContainer');
+                this.icons = Array.from(this.container.getElementsByClassName('floating-icon'));
+                this.currentIndex = 0;
+                this.isOut = false;
+                this.animationDuration = 600;
+                this.stayDuration = 2000;
+                this.init();
+            }
+
+            init() {
+                this.icons.forEach(icon => {
+                    icon.style.opacity = '0';
+                    icon.style.transform = 'translateY(0)';
+                });
+                this.animateLoop();
+            }
+
+            animateLoop() {
+                if (!this.isOut) {
+                    if (this.currentIndex < this.icons.length) {
+                        const icon = this.icons[this.currentIndex];
+                        icon.style.transition = `transform ${this.animationDuration}ms ease, opacity ${this.animationDuration}ms ease`;
+                        icon.style.opacity = '1';
+                        icon.style.transform = 'translateY(-60px)';
+                        this.currentIndex++;
+                        setTimeout(() => this.animateLoop(), this.animationDuration);
+                    } else {
+                        this.isOut = true;
+                        setTimeout(() => this.animateLoop(), this.stayDuration);
+                    }
+                } else {
+                    if (this.currentIndex > 0) {
+                        this.currentIndex--;
+                        const icon = this.icons[this.currentIndex];
+                        icon.style.transition = `transform ${this.animationDuration}ms ease, opacity ${this.animationDuration}ms ease`;
+                        icon.style.opacity = '0';
+                        icon.style.transform = 'translateY(0)';
+                        setTimeout(() => this.animateLoop(), this.animationDuration);
+                    } else {
+                        this.isOut = false;
+                        setTimeout(() => this.animateLoop(), this.stayDuration);
+                    }
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const particleSystem = new ParticleSystem();
+            const holographicUI = new HolographicUI();
+
+            window.addEventListener('unload', () => {
+                particleSystem.cleanup();
+            });
+        });
+    </script>
+</body>
+</html>

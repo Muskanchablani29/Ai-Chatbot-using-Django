@@ -1,0 +1,397 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>About Us - AI Chatbot</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: visible;
+        }
+
+        .intro-text {
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            z-index: 20;
+            max-width: 600px;
+        }
+
+        .intro-text h1 {
+            font-size: 3em;
+            margin: 0 0 10px 0;
+            color: #00f0ff;
+            text-shadow: 0 0 15px #00f0ff;
+        }
+
+        .intro-text p {
+            font-size: 1.2em;
+            color: #a0f0ff;
+            text-shadow: 0 0 8px #00f0ff;
+        }
+
+        .laptop-bg {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            z-index: 30;
+            filter: drop-shadow(0 0 20px #00f0ff);
+            opacity: 1;
+        }
+
+        /* Holographic UI container */
+        .holo-ui {
+            position: absolute;
+            bottom: 280px;
+            left: 50%;
+            transform-style: preserve-3d;
+            transform-origin: center center;
+            transform: translateX(-50%) translateZ(0);
+            width: 600px;
+            height: 300px;
+            pointer-events: none;
+            z-index: 25;
+            animation: holoFadeOut 2s ease forwards;
+            animation-delay: 14s;
+            animation-iteration-count: infinite;
+        }
+
+        /* Connecting circuit lines container */
+        .circuit-lines {
+            position: absolute;
+            bottom: 280px;
+            left: 50%;
+            width: 600px;
+            height: 300px;
+            transform: translateX(-50%);
+            pointer-events: none;
+            z-index: 24;
+            animation: holoFadeOut 2s ease forwards;
+            animation-delay: 14s;
+            animation-iteration-count: infinite;
+        }
+
+        /* Circuit line style */
+        .circuit-line {
+            position: absolute;
+            background: #00f0ff;
+            box-shadow: 0 0 12px #00f0ff;
+            border-radius: 2px;
+            opacity: 0;
+        }
+
+        /* Specific circuit lines connecting elements with animation */
+        .line1 {
+            height: 2px;
+            left: 50%;
+            bottom: 60px;
+            transform: translateX(-50%);
+            width: 0;
+            animation: drawLineWidth 1s ease forwards;
+            animation-delay: 2.5s;
+        }
+
+        .line2 {
+            width: 2px;
+            left: 50%;
+            bottom: 60px;
+            transform: translateX(-50%);
+            height: 0;
+            animation: drawLineHeight 1s ease forwards;
+            animation-delay: 3.5s;
+        }
+
+        .line3 {
+            height: 2px;
+            left: 20%;
+            bottom: 160px;
+            width: 0;
+            animation: drawLineWidth 1s ease forwards;
+            animation-delay: 4.5s;
+        }
+
+        .line4 {
+            width: 2px;
+            left: 20%;
+            bottom: 60px;
+            height: 0;
+            animation: drawLineHeight 1s ease forwards;
+            animation-delay: 5.5s;
+        }
+
+        .line5 {
+            height: 2px;
+            left: 80%;
+            bottom: 160px;
+            width: 0;
+            animation: drawLineWidth 1s ease forwards;
+            animation-delay: 6.5s;
+        }
+
+        .line6 {
+            width: 2px;
+            left: 80%;
+            bottom: 60px;
+            height: 0;
+            animation: drawLineHeight 1s ease forwards;
+            animation-delay: 7.5s;
+        }
+
+        @keyframes drawLineWidth {
+            from { width: 0; opacity: 0; }
+            to { width: var(--line-width, 100%); opacity: 0.8; }
+        }
+
+        @keyframes drawLineHeight {
+            from { height: 0; opacity: 0; }
+            to { height: var(--line-height, 100%); opacity: 0.8; }
+        }
+
+        /* Floating holographic elements */
+        .holo-element {
+            position: absolute;
+            background: rgba(0, 255, 255, 0.15);
+            border: 1px solid #00f0ff;
+            border-radius: 12px;
+            box-shadow: 0 0 20px #00f0ff, inset 0 0 15px #00f0ff;
+            color: #00f0ff;
+            font-weight: 700;
+            text-align: center;
+            padding: 12px;
+            backdrop-filter: blur(10px);
+            user-select: none;
+            opacity: 0;
+            transform: scale(0.8);
+            animation-fill-mode: forwards;
+            animation-iteration-count: infinite;
+        }
+
+        /* Central AI screen */
+        .ai-screen {
+            width: 180px;
+            height: 120px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background: rgba(0, 255, 255, 0.3);
+            border: 2px solid #00f0ff;
+            border-radius: 20px;
+            box-shadow: 0 0 35px #00f0ff, inset 0 0 20px #00f0ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5em;
+            font-weight: 900;
+            color: #00f0ff;
+            text-shadow: 0 0 30px #00f0ff;
+            user-select: none;
+            animation: aiBoxIn 1.5s ease forwards;
+            animation-delay: 0.5s;
+            animation-iteration-count: infinite;
+        }
+
+        /* Individual holo elements positions and sizes with animation and opacity */
+        .cloud {
+            width: 110px;
+            height: 90px;
+            left: 10%;
+            top: 20%;
+            animation: holoBoxIn 1s ease forwards;
+            animation-delay: 8.5s;
+        }
+
+        .graph {
+            width: 130px;
+            height: 100px;
+            left: 75%;
+            top: 15%;
+            animation: holoBoxIn 1s ease forwards;
+            animation-delay: 9.5s;
+        }
+
+        .analytics {
+            width: 100px;
+            height: 100px;
+            left: 20%;
+            top: 65%;
+            animation: holoBoxIn 1s ease forwards;
+            animation-delay: 10.5s;
+        }
+
+        .security {
+            width: 90px;
+            height: 90px;
+            left: 70%;
+            top: 65%;
+            animation: holoBoxIn 1s ease forwards;
+            animation-delay: 11.5s;
+        }
+
+        .user-profile {
+            width: 80px;
+            height: 80px;
+            left: 45%;
+            top: 10%;
+            animation: holoBoxIn 1s ease forwards;
+            animation-delay: 12.5s;
+        }
+
+        /* Animation keyframes */
+        @keyframes aiBoxIn {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+                box-shadow: 0 0 0 #00f0ff;
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 0 35px #00f0ff, inset 0 0 20px #00f0ff;
+            }
+        }
+
+        @keyframes holoBoxIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+                box-shadow: 0 0 0 #00f0ff;
+            }
+            100% {
+                opacity: 0.85;
+                transform: scale(1);
+                box-shadow: 0 0 20px #00f0ff, inset 0 0 15px #00f0ff;
+            }
+        }
+
+        @keyframes holoFadeOut {
+            0% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* Icon styles */
+        .icon {
+            font-size: 3em;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 0 8px #00f0ff);
+        }
+
+        /* Data visualization bars for graph */
+        .bar-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            height: 50px;
+            margin-top: 8px;
+        }
+
+        .bar {
+            width: 12px;
+            background: #00f0ff;
+            border-radius: 4px;
+            box-shadow: 0 0 10px #00f0ff;
+            animation: pulse 2s infinite alternate;
+        }
+
+        .bar:nth-child(1) {
+            height: 25px;
+            animation-delay: 0s;
+        }
+
+        .bar:nth-child(2) {
+            height: 35px;
+            animation-delay: 0.5s;
+        }
+
+        .bar:nth-child(3) {
+            height: 20px;
+            animation-delay: 1s;
+        }
+
+        .bar:nth-child(4) {
+            height: 30px;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 10px #00f0ff;
+                background: #00f0ff;
+            }
+            100% {
+                box-shadow: 0 0 25px #00f0ff;
+                background: #00aaff;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="intro-text">
+            <h1>Welcome to Our AI Chatbot</h1>
+            <p>Discover how our intelligent assistant revolutionizes conversations through deep generative AI learning.</p>
+        </div>
+
+        <img src="{% static 'images/Laptop.png' %}" class="laptop-bg" alt="Laptop" />
+
+        <div class="circuit-lines" aria-hidden="true">
+            <div class="circuit-line line1" style="--line-width: 120px;"></div>
+            <div class="circuit-line line2" style="--line-height: 100px;"></div>
+            <div class="circuit-line line3" style="--line-width: 150px;"></div>
+            <div class="circuit-line line4" style="--line-height: 100px;"></div>
+            <div class="circuit-line line5" style="--line-width: 150px;"></div>
+            <div class="circuit-line line6" style="--line-height: 100px;"></div>
+        </div>
+
+        <div class="holo-ui" aria-label="Holographic AI UI elements floating above laptop keyboard">
+            <div class="holo-element cloud" title="Cloud Computing">
+                <div class="icon">☁️</div>
+                Cloud Computing
+            </div>
+            <div class="holo-element graph" title="Data Analytics">
+                <div class="icon">📊</div>
+                <div>Analytics</div>
+                <div class="bar-container">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+            </div>
+            <div class="holo-element analytics" title="AI Brain">
+                <div class="icon">🧠</div>
+                AI Brain
+            </div>
+            <div class="holo-element security" title="Security">
+                <div class="icon">🔒</div>
+                Security
+            </div>
+            <div class="holo-element user-profile" title="User Profiles">
+                <div class="icon">👤</div>
+                User Profiles
+            </div>
+        </div>
+    </div>
+</body>
+</html>

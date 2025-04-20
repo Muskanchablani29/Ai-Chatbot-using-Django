@@ -5,4 +5,5 @@ app_name = 'About'
 
 urlpatterns = [
     path('', views.About, name='About'),
+    path('Aboutone/', views.Aboutpartone, name='Aboutpart1')
 ]

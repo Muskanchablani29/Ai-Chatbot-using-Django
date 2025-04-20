@@ -26,7 +26,7 @@
             align-items: center;
             background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
+            {% comment %} padding: 1rem 2rem; {% endcomment %}
             position: fixed;
             width: 100%;
             max-height: 90px;
@@ -37,6 +37,7 @@
 
         .logo {
             color: var(--primary-color);
+            padding-left: 1rem;
             font-size: 1.8rem;
             font-weight: 600;
             text-transform: uppercase;
@@ -169,6 +170,9 @@
             display: inline-block;
         }
 
+        .auth_buttons {
+            padding-right: 2rem;
+        }
         .profile-text {
             color: var(--primary-color);
             cursor: pointer;
@@ -235,6 +239,7 @@
             border-radius: 8px;
             font-weight: 600;
             letter-spacing: 1px;
+            padding-right: 1.5rem;
             text-transform: uppercase;
         }
 
@@ -320,7 +325,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{% url 'chat' %}">
+                <a href="{% url 'Chat:chat' %}">
                     <i class="nav-icon fas fa-comments"></i>
                     <span class="nav-text">Chat</span>
                     <div class="nav-rotating-text">
@@ -352,7 +357,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{% url 'contact' %}">
+                <a href="{% url 'Contact:Contact' %}">
                     <i class="nav-icon fas fa-envelope"></i>
                     <span class="nav-text">Contact</span>
                     <div class="nav-rotating-text">

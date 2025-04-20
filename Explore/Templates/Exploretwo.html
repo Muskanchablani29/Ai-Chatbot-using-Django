@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Code Assistant</title>
+  <style>
+    
+    .card-container {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 2rem;
+      width: 300px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+    }
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(0, 255, 255, 0.2);
+    }
+    .output-box {
+      margin-top: 2rem;
+      display: none;
+    }
+    .chatbox {
+      background: #1e1e1e;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+    }
+    .chatbox textarea {
+      resize: none;
+      height: 100px;
+      border-radius: 8px;
+      border: none;
+      padding: 1rem;
+      font-family: monospace;
+    }
+    .response {
+      background: #2a2a2a;
+      padding: 1rem;
+      margin-top: 1rem;
+      border-radius: 8px;
+      white-space: pre-wrap;
+    }
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+    }
+    button {
+      background: #009688;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .lang-select {
+      display: none;
+      margin-top: 1rem;
+    }
+    .lang-select select {
+      padding: 0.5rem;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="text-align:center;">Explore AI Coding Assistant</h1>
+  <div class="card-container">
+    <div class="card" id="fixErrorCard">🔧 Fix Code Error</div>
+    <div class="card" id="generateCodeCard">💡 Generate Code</div>
+  </div>
+
+  <div class="output-box" id="errorBox">
+    <div class="chatbox">
+      <textarea id="errorInput" placeholder="Paste your buggy code here..."></textarea>
+      <div class="buttons">
+        <button onclick="handleFixError()">Generate Fixed Code</button>
+        <button onclick="clearErrorInput()">New Code</button>
+      </div>
+      <div class="response" id="errorResponse"></div>
+    </div>
+  </div>
+
+  <div class="output-box" id="generateBox">
+    <div class="lang-select">
+      <label style="margin-right:10px">Select Language:</label>
+      <select id="language">
+        <option value="python">Python</option>
+        <option value="javascript">JavaScript</option>
+        <option value="cpp">C++</option>
+        <option value="java">Java</option>
+        <option value="csharp">C#</option>
+      </select>
+    </div>
+    <div class="chatbox">
+      <textarea id="genInput" placeholder="e.g., Write a Python code to print prime numbers"></textarea>
+      <div class="buttons">
+        <button onclick="handleGenerateCode()">Generate</button>
+        <button onclick="clearGenInput()">New Prompt</button>
+      </div>
+      <div class="response" id="genResponse"></div>
+    </div>
+  </div>
+
+  <script>
+    const fixCard = document.getElementById('fixErrorCard');
+    const genCard = document.getElementById('generateCodeCard');
+    const errorBox = document.getElementById('errorBox');
+    const genBox = document.getElementById('generateBox');
+    const langSelect = document.querySelector('.lang-select');
+
+    fixCard.onclick = () => {
+      errorBox.style.display = 'block';
+      genBox.style.display = 'none';
+    }
+
+    genCard.onclick = () => {
+      genBox.style.display = 'block';
+      errorBox.style.display = 'none';
+      langSelect.style.display = 'block';
+    }
+
+    async function handleFixError() {
+      const code = document.getElementById('errorInput').value;
+      try {
+        const response = await fetch('/api/fix-code', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ code })
+        });
+        if (!response.ok) {
+          const errorData = await response.json();
+          document.getElementById('errorResponse').textContent = "Error: " + (errorData.details || "Unknown error");
+          return;
+        }
+        const data = await response.json();
+        document.getElementById('errorResponse').textContent = data.result;
+      } catch (error) {
+        document.getElementById('errorResponse').textContent = "Network or server error: " + error.message;
+      }
+    }
+
+    async function handleGenerateCode() {
+      const lang = document.getElementById('language').value;
+      const prompt = document.getElementById('genInput').value;
+      try {
+        const response = await fetch('/api/generate-code', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ prompt, lang })
+        });
+        if (!response.ok) {
+          const errorData = await response.json();
+          document.getElementById('genResponse').textContent = "Error: " + (errorData.details || "Unknown error");
+          return;
+        }
+        const data = await response.json();
+        document.getElementById('genResponse').textContent = data.result;
+      } catch (error) {
+        document.getElementById('genResponse').textContent = "Network or server error: " + error.message;
+      }
+    }
+
+    function clearErrorInput() {
+      document.getElementById('errorInput').value = '';
+      document.getElementById('errorResponse').textContent = '';
+    }
+
+    function clearGenInput() {
+      document.getElementById('genInput').value = '';
+      document.getElementById('genResponse').textContent = '';
+    }
+  </script>
+</body>
+</html>

@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'Home',
     'About',
     'Profile',
+    'Chat',
+    'Explore',
+    'Contact',
     ]
 
 MIDDLEWARE = [
@@ -124,12 +127,19 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR/ 'static']
+STATICFILES_DIRS = [BASE_DIR / 'About' / 'static', BASE_DIR / 'static']
 
 AUTH_USER_MODEL = 'Profile.CustomUser'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Gemini API Configuration
+GEMINI_API_KEY = 'your_gemini_api_key'
+
 
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# OPENAI_API_KEY = "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"
