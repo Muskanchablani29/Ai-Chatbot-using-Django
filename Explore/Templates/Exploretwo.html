@@ -1,189 +1,767 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Code Assistant</title>
-  <style>
-    
-    .card-container {
-      display: flex;
-      gap: 2rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .card {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      padding: 2rem;
-      width: 300px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease-in-out;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
-    }
-    .card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 25px rgba(0, 255, 255, 0.2);
-    }
-    .output-box {
-      margin-top: 2rem;
-      display: none;
-    }
-    .chatbox {
-      background: #1e1e1e;
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-top: 1rem;
-      display: flex;
-      flex-direction: column;
-    }
-    .chatbox textarea {
-      resize: none;
-      height: 100px;
-      border-radius: 8px;
-      border: none;
-      padding: 1rem;
-      font-family: monospace;
-    }
-    .response {
-      background: #2a2a2a;
-      padding: 1rem;
-      margin-top: 1rem;
-      border-radius: 8px;
-      white-space: pre-wrap;
-    }
-    .buttons {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 1rem;
-    }
-    button {
-      background: #009688;
-      border: none;
-      padding: 0.6rem 1.2rem;
-      color: white;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .lang-select {
-      display: none;
-      margin-top: 1rem;
-    }
-    .lang-select select {
-      padding: 0.5rem;
-      border-radius: 8px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next-Gen AI Code Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #0a0e17;
+            --secondary-bg: #111827;
+            --accent-primary: #3b82f6;
+            --accent-secondary: #10b981;
+            --accent-tertiary: #8b5cf6;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --neon-glow: 0 0 10px rgba(59, 130, 246, 0.5),
+                         0 0 20px rgba(59, 130, 246, 0.3),
+                         0 0 30px rgba(59, 130, 246, 0.1);
+            --card-gradient: linear-gradient(145deg, rgba(17, 24, 39, 0.9), rgba(10, 14, 23, 0.9));
+            --button-gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        }
+
+        /* Core Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        @keyframes borderFlow {
+            0%, 100% { border-color: var(--accent-primary); }
+            33% { border-color: var(--accent-secondary); }
+            66% { border-color: var(--accent-tertiary); }
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            padding: 3rem 0;
+            position: relative;
+            margin-bottom: 4rem;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 4px;
+            background: var(--button-gradient);
+            border-radius: 2px;
+            filter: blur(2px);
+        }
+
+        .title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #3b82f6, #8b5cf6, #10b981);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: pulse 3s infinite;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Card Grid */
+        .selection-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: var(--card-gradient);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 2px solid transparent;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, 
+                transparent 0%, 
+                rgba(59, 130, 246, 0.1) 50%, 
+                transparent 100%);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border: 2px solid var(--accent-primary);
+            animation: borderFlow 3s infinite;
+        }
+
+        .card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .card i {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            background: var(--button-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover i {
+            transform: scale(1.2) rotate(360deg);
+        }
+
+        .card h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .section {
+            display: none;
+            background: var(--secondary-dark);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--neon-shadow);
+            animation: fadeIn 0.5s ease-out;
+            margin-top: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient-1);
+            animation: borderGlow 2s infinite;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .language-select {
+            width: 200px;
+            padding: 0.75rem 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--accent-blue);
+            border-radius: 10px;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 179, 255, 0.1);
+        }
+
+        .language-select:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 20px rgba(0, 179, 255, 0.2);
+            outline: none;
+            transform: translateY(-2px);
+        }
+
+        .language-select option {
+            background: var(--secondary-dark);
+            color: var(--text-primary);
+            padding: 10px;
+        }
+
+        .prompt-input, .fix-input {
+            width: 100%;
+            min-height: 120px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--accent-blue);
+            border-radius: 12px;
+            padding: 1.25rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            resize: vertical;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 0 10px rgba(0, 179, 255, 0.1);
+        }
+
+        .prompt-input:focus, .fix-input:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 20px rgba(0, 179, 255, 0.2);
+            outline: none;
+            transform: translateY(-2px);
+        }
+
+        .button-container {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .button {
+            background: var(--gradient-1);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--neon-shadow);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .button i {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .button:hover i {
+            transform: rotate(360deg);
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(0, 179, 255, 0.6);
+        }
+
+        .button:active {
+            transform: translateY(1px);
+        }
+
+        .output-section {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            border: 1px solid var(--accent-blue);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .output-section h3 {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .output-section h3 i {
+            color: var(--accent-blue);
+        }
+
+        .code-output, .error-details, .fixed-code-output {
+            font-family: 'JetBrains Mono', monospace;
+            padding: 1.5rem;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--accent-blue);
+            line-height: 1.6;
+            margin: 1rem 0;
+            max-height: 400px;
+            overflow-y: auto;
+            box-shadow: inset 0 0 10px rgba(0, 179, 255, 0.1);
+            position: relative;
+        }
+
+        .code-output::before, .error-details::before, .fixed-code-output::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient-1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .code-output:hover::before, .error-details:hover::before, .fixed-code-output:hover::before {
+            opacity: 1;
+        }
+
+        .loading {
+            display: none;
+            align-items: center;
+            gap: 1rem;
+            color: var(--accent-blue);
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            border: 1px solid var(--accent-blue);
+            animation: glow 2s infinite;
+        }
+
+        .loading-spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--accent-glow);
+            border-top: 3px solid var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            box-shadow: 0 0 10px var(--accent-blue);
+        }
+
+        .back-button {
+            background: transparent;
+            border: 2px solid var(--accent-blue);
+            color: var(--accent-blue);
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            width: fit-content;
+        }
+
+        .back-button:hover {
+            background: var(--accent-blue);
+            color: white;
+            transform: translateX(-5px);
+        }
+
+        .back-button i {
+            transition: transform 0.3s ease;
+        }
+
+        .back-button:hover i {
+            transform: translateX(-5px);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--gradient-1);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            box-shadow: var(--neon-shadow);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast i {
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            .title {
+                font-size: 2.5rem;
+            }
+            .card {
+                padding: 2rem;
+            }
+            .button-container {
+                flex-direction: column;
+            }
+            .button {
+                width: 100%;
+            }
+            .section {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--primary-dark);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-blue);
+            border-radius: 4px;
+            box-shadow: 0 0 5px var(--accent-blue);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+    </style>
 </head>
 <body>
-  <h1 style="text-align:center;">Explore AI Coding Assistant</h1>
-  <div class="card-container">
-    <div class="card" id="fixErrorCard">🔧 Fix Code Error</div>
-    <div class="card" id="generateCodeCard">💡 Generate Code</div>
-  </div>
+    {% csrf_token %}
+    <div class="particles"></div>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">AI Code Generator</h1>
+            <p class="subtitle">Transform your ideas into code</p>
+        </header>
 
-  <div class="output-box" id="errorBox">
-    <div class="chatbox">
-      <textarea id="errorInput" placeholder="Paste your buggy code here..."></textarea>
-      <div class="buttons">
-        <button onclick="handleFixError()">Generate Fixed Code</button>
-        <button onclick="clearErrorInput()">New Code</button>
-      </div>
-      <div class="response" id="errorResponse"></div>
+        <div id="selectionScreen" class="selection-cards">
+            <div class="card" id="fixCodeCard" onclick="showSection('fixCodeSection')">
+                <i class="fas fa-tools"></i>
+                <h2>Fix Code</h2>
+                <p>Debug and optimize your existing code</p>
+            </div>
+            <div class="card" id="generateCodeCard" onclick="showSection('generateCodeSection')">
+                <i class="fas fa-code"></i>
+                <h2>Generate Code</h2>
+                <p>Create new code from your description</p>
+            </div>
+        </div>
+
+        <div id="generateCodeSection" class="section">
+            <button class="back-button" onclick="showSection('selectionScreen')">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <select class="language-select" id="language">
+                <option value="python">Python</option>
+                <option value="javascript">JavaScript</option>
+                <option value="java">Java</option>
+                <option value="cpp">C++</option>
+                <option value="csharp">C#</option>
+            </select>
+            <textarea class="prompt-input" id="prompt" 
+                      placeholder="Describe what you want the code to do..."></textarea>
+            <div class="button-container">
+                <button class="button" onclick="generateCode()" id="generateBtn">
+                    <i class="fas fa-magic"></i> Generate Code
+                </button>
+            </div>
+            <div class="loading" id="loading">
+                <div class="loading-spinner"></div>
+                <span>Generating your code...</span>
+            </div>
+            <div class="output-section">
+                <h3><i class="fas fa-code"></i> Generated Code</h3>
+                <pre class="code-output" id="output">// Your generated code will appear here</pre>
+                <div class="button-container">
+                    <button class="button" onclick="copyGeneratedCode()">
+                        <i class="fas fa-copy"></i> Copy Code
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="fixCodeSection" class="section">
+            <button class="back-button" onclick="showSection('selectionScreen')">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <textarea class="fix-input" id="userCodeInput" 
+                      placeholder="Paste your code here for analysis..."></textarea>
+            <div class="button-container">
+                <button class="button" onclick="fixCode()" id="fixCodeBtn">
+                    <i class="fas fa-wrench"></i> Analyze & Fix Code
+                </button>
+            </div>
+            <div class="output-section">
+                <h3><i class="fas fa-exclamation-triangle"></i> Error Details</h3>
+                <pre class="error-details" id="errorDetails">// Error analysis will appear here</pre>
+                <h3><i class="fas fa-check-circle"></i> Fixed Code</h3>
+                <pre class="fixed-code-output" id="fixedCodeOutput">// Optimized code will appear here</pre>
+                <div class="button-container">
+                    <button class="button" onclick="copyFixedCode()">
+                        <i class="fas fa-copy"></i> Copy Fixed Code
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <div class="output-box" id="generateBox">
-    <div class="lang-select">
-      <label style="margin-right:10px">Select Language:</label>
-      <select id="language">
-        <option value="python">Python</option>
-        <option value="javascript">JavaScript</option>
-        <option value="cpp">C++</option>
-        <option value="java">Java</option>
-        <option value="csharp">C#</option>
-      </select>
+    <div id="toast" class="toast">
+        <i class="fas fa-info-circle"></i>
+        <span></span>
     </div>
-    <div class="chatbox">
-      <textarea id="genInput" placeholder="e.g., Write a Python code to print prime numbers"></textarea>
-      <div class="buttons">
-        <button onclick="handleGenerateCode()">Generate</button>
-        <button onclick="clearGenInput()">New Prompt</button>
-      </div>
-      <div class="response" id="genResponse"></div>
-    </div>
-  </div>
 
-  <script>
-    const fixCard = document.getElementById('fixErrorCard');
-    const genCard = document.getElementById('generateCodeCard');
-    const errorBox = document.getElementById('errorBox');
-    const genBox = document.getElementById('generateBox');
-    const langSelect = document.querySelector('.lang-select');
-
-    fixCard.onclick = () => {
-      errorBox.style.display = 'block';
-      genBox.style.display = 'none';
-    }
-
-    genCard.onclick = () => {
-      genBox.style.display = 'block';
-      errorBox.style.display = 'none';
-      langSelect.style.display = 'block';
-    }
-
-    async function handleFixError() {
-      const code = document.getElementById('errorInput').value;
-      try {
-        const response = await fetch('/api/fix-code', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ code })
-        });
-        if (!response.ok) {
-          const errorData = await response.json();
-          document.getElementById('errorResponse').textContent = "Error: " + (errorData.details || "Unknown error");
-          return;
+    <script>
+        // Create particle effect
+        function createParticles() {
+            const particlesContainer = document.querySelector('.particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.top = Math.random() * 100 + 'vh';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particlesContainer.appendChild(particle);
+            }
         }
-        const data = await response.json();
-        document.getElementById('errorResponse').textContent = data.result;
-      } catch (error) {
-        document.getElementById('errorResponse').textContent = "Network or server error: " + error.message;
-      }
-    }
 
-    async function handleGenerateCode() {
-      const lang = document.getElementById('language').value;
-      const prompt = document.getElementById('genInput').value;
-      try {
-        const response = await fetch('/api/generate-code', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ prompt, lang })
-        });
-        if (!response.ok) {
-          const errorData = await response.json();
-          document.getElementById('genResponse').textContent = "Error: " + (errorData.details || "Unknown error");
-          return;
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const icon = toast.querySelector('i');
+            const span = toast.querySelector('span');
+            
+            // Set icon based on type
+            icon.className = type === 'success' 
+                ? 'fas fa-check-circle' 
+                : type === 'error' 
+                    ? 'fas fa-exclamation-circle' 
+                    : 'fas fa-info-circle';
+            
+            span.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
         }
-        const data = await response.json();
-        document.getElementById('genResponse').textContent = data.result;
-      } catch (error) {
-        document.getElementById('genResponse').textContent = "Network or server error: " + error.message;
-      }
-    }
 
-    function clearErrorInput() {
-      document.getElementById('errorInput').value = '';
-      document.getElementById('errorResponse').textContent = '';
-    }
+        // Section navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById('selectionScreen').style.display = 
+                sectionId === 'selectionScreen' ? 'grid' : 'none';
+            if (sectionId !== 'selectionScreen') {
+                document.getElementById(sectionId).classList.add('active');
+            }
+        }
 
-    function clearGenInput() {
-      document.getElementById('genInput').value = '';
-      document.getElementById('genResponse').textContent = '';
-    }
-  </script>
+        // Copy to clipboard functionality
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(
+                () => showToast('Code copied to clipboard!', 'success'),
+                err => showToast('Failed to copy code: ' + err, 'error')
+            );
+        }
+
+        function copyGeneratedCode() {
+            const output = document.getElementById('output');
+            if (!output.textContent.trim() || 
+                output.textContent.includes('Your generated code will appear here')) {
+                showToast('No code to copy!', 'error');
+                return;
+            }
+            copyToClipboard(output.textContent);
+        }
+
+        function copyFixedCode() {
+            const fixedCode = document.getElementById('fixedCodeOutput');
+            if (!fixedCode.textContent.trim() || 
+                fixedCode.textContent.includes('Optimized code will appear here')) {
+                showToast('No fixed code to copy!', 'error');
+                return;
+            }
+            copyToClipboard(fixedCode.textContent);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            showSection('selectionScreen');
+        });
+
+        // Generate code function
+        async function generateCode() {
+            const prompt = document.getElementById('prompt').value.trim();
+            const language = document.getElementById('language').value;
+            const output = document.getElementById('output');
+            const loading = document.getElementById('loading');
+            const generateBtn = document.getElementById('generateBtn');
+
+            if (!prompt) {
+                showToast('Please enter a prompt to generate code.', 'error');
+                return;
+            }
+
+            output.textContent = '';
+            loading.style.display = 'flex';
+            generateBtn.disabled = true;
+
+            try {
+                const response = await fetch('/Explore/generate_code/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({ prompt, language })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                if (data.error) {
+                    showToast(`Error: ${data.error}`, 'error');
+                    output.textContent = '// Error generating code';
+                } else {
+                    output.textContent = data.code || '// No code generated';
+                }
+            } catch (error) {
+                showToast(`Error: ${error.message}`, 'error');
+                output.textContent = '// Error generating code';
+            } finally {
+                loading.style.display = 'none';
+                generateBtn.disabled = false;
+            }
+        }
+
+        // Fix code function
+        async function fixCode() {
+            const userCode = document.getElementById('userCodeInput').value.trim();
+            const errorDetails = document.getElementById('errorDetails');
+            const fixedCodeOutput = document.getElementById('fixedCodeOutput');
+            const fixCodeBtn = document.getElementById('fixCodeBtn');
+
+            if (!userCode) {
+                showToast('Please enter code to analyze and fix.', 'error');
+                return;
+            }
+
+            errorDetails.textContent = '';
+            fixedCodeOutput.textContent = '';
+            fixCodeBtn.disabled = true;
+
+            try {
+                const response = await fetch('/Explore/fix_code/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({ code: userCode })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                if (data.error) {
+                    showToast(`Error: ${data.error}`, 'error');
+                    errorDetails.textContent = '// Error analyzing code';
+                    fixedCodeOutput.textContent = '';
+                } else {
+                    errorDetails.textContent = data.error_details || '// No errors found';
+                    fixedCodeOutput.textContent = data.fixed_code || '// No fixed code returned';
+                }
+            } catch (error) {
+                showToast(`Error: ${error.message}`, 'error');
+                errorDetails.textContent = '// Error analyzing code';
+                fixedCodeOutput.textContent = '';
+            } finally {
+                fixCodeBtn.disabled = false;
+            }
+        }
+
+        // Helper function to get CSRF token from cookies
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
 </body>
 </html>

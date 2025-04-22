@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Genius AI Chatting</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .genius-main-container {
+      background-color: #0e0e0e;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex-direction: column;
+    }
+
+    .genius-content {
+      text-align: center;
+      max-width: 1100px;
+      z-index: 2;
+      padding: 0 20px;
+    }
+
+    .genius-content h1 {
+      font-size: 6rem;
+      line-height: 1.3;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .text-line {
+      display: block;
+      opacity: 0;
+    }
+
+    .line-1 {
+      transform: translateX(-150%);
+    }
+
+    .line-2 {
+      transform: translateX(150%);
+    }
+
+    .line-3 {
+      transform: translateX(-150%);
+    }
+
+    .genius-content h1 .highlight {
+      color: #00f7ff;
+      text-shadow: 0 0 10px rgba(0, 247, 255, 0.3);
+    }
+
+    .genius-paragraph {
+      font-size: 1.6rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 30px;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .small-paragraph {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.5);
+      margin-top: 15px;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .genius-ring-container {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+
+    .genius-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      border: 2px solid rgba(0, 247, 255, 0.3);
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      box-shadow: 0 0 25px rgba(0, 247, 255, 0.4);
+    }
+
+    .genius-ring1 { width: 300px; height: 300px; }
+    .genius-ring2 { width: 450px; height: 450px; }
+    .genius-ring3 { width: 600px; height: 600px; }
+    .genius-ring4 { width: 750px; height: 750px; }
+    .genius-ring5 { width: 900px; height: 900px; }
+    .genius-ring6 { width: 1050px; height: 1050px; }
+
+    .floating-message {
+      position: absolute;
+      background: rgba(13, 17, 23, 0.95);
+      border: 1px solid rgba(0, 247, 255, 0.2);
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: #e6edf3;
+      font-size: 0.85rem;
+      opacity: 0;
+      z-index: 1;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3),
+                  0 0 20px rgba(0, 247, 255, 0.1);
+      max-width: 280px;
+      font-family: 'Consolas', monospace;
+      transform: translateY(20px) scale(0.95);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #00f7ff;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(0, 247, 255, 0.5);
+      flex-shrink: 0;
+    }
+
+    .message-text {
+      color: #00f7ff;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    @media (max-width: 768px) {
+      .genius-content h1 {
+        font-size: 3.5rem;
+      }
+      .genius-paragraph {
+        font-size: 1.2rem;
+      }
+      .small-paragraph {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="genius-main-container">
+    <div class="genius-ring-container">
+      <div class="genius-ring genius-ring1"></div>
+      <div class="genius-ring genius-ring2"></div>
+      <div class="genius-ring genius-ring3"></div>
+      <div class="genius-ring genius-ring4"></div>
+      <div class="genius-ring genius-ring5"></div>
+      <div class="genius-ring genius-ring6"></div>
+    </div>
+
+    <div class="genius-content">
+      <h1>
+        <span class="text-line line-1">
+          <span class="highlight">Examine the</span>
+        </span>
+        <span class="text-line line-2">
+          Potential of Genius's
+        </span>
+        <span class="text-line line-3">
+          <span class="highlight">AI Chatting</span>
+        </span>
+      </h1>
+      <p class="genius-paragraph">Unleash the power of AI in everyday conversations.</p>
+      <p class="small-paragraph">Experience the future of intelligent communication with our cutting-edge AI technology.</p>
+    </div>
+  </div>
+  <script>
+    // Text animations
+    const textTimeline = gsap.timeline();
+    
+    textTimeline
+      .to(".line-1", {
+        x: 0,
+        opacity: 1,
+        duration: 2,
+        ease: "power2.out"
+      })
+      .to(".line-2", {
+        x: 0,
+        opacity: 1,
+        duration: 2,
+        ease: "power2.out"
+      }, "-=1.5")
+      .to(".line-3", {
+        x: 0,
+        opacity: 1,
+        duration: 2,
+        ease: "power2.out"
+      }, "-=1.5")
+      .to(".genius-paragraph", {
+        y: 0,
+        opacity: 1,
+        duration: 1.5,
+        ease: "power2.out"
+      })
+      .to(".small-paragraph", {
+        y: 0,
+        opacity: 1,
+        duration: 1.5,
+        ease: "power2.out"
+      });
+
+    const messages = [
+      "Initializing AI systems...",
+      "Processing neural networks...",
+      "Analyzing input patterns...",
+      "Generating response...",
+      "Optimizing algorithms...",
+      "Training model...",
+      "Computing results...",
+      "Updating neural paths...",
+      "Learning from data...",
+      "Implementing solutions...",
+      "Validating output...",
+      "Enhancing accuracy..."
+    ];
+
+    function createMultipleMessages() {
+      const count = Math.floor(Math.random() * 2) + 2; // 2-3 messages
+      const usedPositions = [];
+      
+      for(let i = 0; i < count; i++) {
+        setTimeout(() => {
+          const message = messages[Math.floor(Math.random() * messages.length)];
+          const messageEl = document.createElement('div');
+          messageEl.className = 'floating-message';
+          
+          messageEl.innerHTML = `
+            <div class="status-dot"></div>
+            <span class="message-text">${message}</span>
+          `;
+
+          let x, y;
+          let attempts = 0;
+          const padding = 20;
+          const maxX = window.innerWidth - 300;
+          const maxY = window.innerHeight - 60;
+          
+          do {
+            x = padding + Math.random() * (maxX - padding * 2);
+            y = padding + Math.random() * (maxY - padding * 2);
+            attempts++;
+          } while (
+            usedPositions.some(pos => 
+              Math.abs(pos.x - x) < 320 && 
+              Math.abs(pos.y - y) < 70
+            ) && 
+            attempts < 10
+          );
+
+          usedPositions.push({ x, y });
+          
+          messageEl.style.left = `${x}px`;
+          messageEl.style.top = `${y}px`;
+          
+          document.querySelector('.genius-main-container').appendChild(messageEl);
+
+          gsap.timeline()
+            .to(messageEl, {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.8,
+              ease: "power3.out"
+            })
+            .to(messageEl, {
+              opacity: 0,
+              y: -20,
+              scale: 0.95,
+              duration: 0.6,
+              delay: 2.5,
+              ease: "power3.in",
+              onComplete: () => {
+                messageEl.remove();
+                const index = usedPositions.findIndex(pos => pos.x === x && pos.y === y);
+                if (index > -1) usedPositions.splice(index, 1);
+              }
+            });
+
+          gsap.to(messageEl.querySelector('.status-dot'), {
+            opacity: 0.5,
+            duration: 0.8,
+            repeat: -1,
+            yoyo: true,
+            ease: "power2.inOut"
+          });
+
+        }, i * 400);
+      }
+    }
+
+    function startFloatingMessages() {
+      setTimeout(() => {
+        createMultipleMessages();
+        setInterval(createMultipleMessages, 4000);
+      }, 1000);
+    }
+
+    textTimeline.call(startFloatingMessages);
+
+    // Ring animations
+    const ringTimeline = gsap.timeline({
+      repeat: -1,
+      yoyo: true,
+      repeatDelay: 1
+    });
+
+    document.querySelectorAll('.genius-ring').forEach((ring, index) => {
+      ringTimeline.to(ring, {
+        scale: 1,
+        opacity: 0.5,
+        duration: 0.8,
+        ease: "power2.out"
+      }, index * 0.2);
+    });
+
+    gsap.to('.genius-ring', {
+      rotate: 360,
+      duration: 30,
+      repeat: -1,
+      ease: "none",
+      stagger: {
+        each: 0.5,
+        from: "start"
+      }
+    });
+
+    gsap.to('.genius-ring', {
+      boxShadow: '0 0 30px rgba(0, 247, 255, 0.45)',
+      duration: 2,
+      repeat: -1,
+      yoyo: true,
+      stagger: {
+        each: 0.3,
+        from: "center"
+      }
+    });
+  </script>
+</body>
+</html>

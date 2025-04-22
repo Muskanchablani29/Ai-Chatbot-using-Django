@@ -48,7 +48,7 @@
           font-family: 'Inter', sans-serif;
           background-color: #0c0c0c;
           color: #f3f4f6;
-          padding-top: 2rem;
+          margin-top: 80px;
       }
 
       .ai-animation {
@@ -82,6 +82,21 @@
           0% { opacity: 0.1; }
           50% { opacity: 0.5; }
           100% { opacity: 0.2; }
+      }
+
+      @keyframes fade-in {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .animate-fade-in {
+        animation: fade-in 0.3s ease-out forwards;
       }
 
       .floating-input {
@@ -243,55 +258,34 @@
               </p>
             </div>
 
-            <form id="contact-form" class="space-y-4">
-              <div class="floating-input">
-                <input
-                  type="text"
-                  id="name"
-                  placeholder=" "
-                  autocomplete="off"
-                />
-                <label for="name">Full Name</label>
-              </div>
-
-              <div class="floating-input">
-                <input
-                  type="email"
-                  id="email"
-                  placeholder=" "
-                  autocomplete="off"
-                />
-                <label for="email">Email Address</label>
-              </div>
-
-              <div class="floating-input">
-                <input
-                  type="text"
-                  id="subject"
-                  placeholder=" "
-                  autocomplete="off"
-                />
-                <label for="subject">Subject</label>
-              </div>
-
-              <div class="floating-input">
-                <textarea
-                  id="message"
-                  rows="4"
-                  placeholder=" "
-                  autocomplete="off"
-                ></textarea>
-                <label for="message">Your Message</label>
-              </div>
-
-              <button
-                type="submit"
-                class="send-button w-full bg-secondary text-white py-3 px-6 rounded-button font-medium transition-all hover:bg-secondary/90 flex items-center justify-center space-x-2 whitespace-nowrap"
-              >
-                <span>Send Message</span>
-                <i class="ri-send-plane-fill"></i>
-              </button>
+            <form id="contact-form" class="space-y-4" method="POST" action="{% url 'Contact:contact' %}">
+                {% csrf_token %}
+                <div class="floating-input">
+                    <input type="text" id="name" name="name" placeholder=" " autocomplete="off" required />
+                    <label for="name">Full Name</label>
+                </div>
+            
+                <div class="floating-input">
+                    <input type="email" id="email" name="email" placeholder=" " autocomplete="off" required />
+                    <label for="email">Email Address</label>
+                </div>
+            
+                <div class="floating-input">
+                    <input type="text" id="subject" name="subject" placeholder=" " autocomplete="off" required />
+                    <label for="subject">Subject</label>
+                </div>
+            
+                <div class="floating-input">
+                    <textarea id="message" name="message" rows="4" placeholder=" " autocomplete="off" required></textarea>
+                    <label for="message">Your Message</label>
+                </div>
+            
+                <button type="submit" class="send-button w-full bg-secondary text-white py-3 px-6 rounded-button font-medium transition-all hover:bg-secondary/90 flex items-center justify-center space-x-2 whitespace-nowrap">
+                    <span>Send Message</span>
+                    <i class="ri-send-plane-fill"></i>
+                </button>
             </form>
+            
           </div>
         </div>
       </section>
@@ -371,44 +365,7 @@
       </section>
 
       <!-- Map Section -->
-      <section class="py-16 bg-[#111]">
-        <div class="container mx-auto px-6">
-          <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-white mb-4">Find Us</h2>
-            <p class="text-gray-400 max-w-2xl mx-auto">
-              Located in the heart of the tech district, our office is easily
-              accessible by public transportation.
-            </p>
-          </div>
-
-          <div class="h-[400px] rounded-lg overflow-hidden relative">
-            <div
-              class="absolute inset-0"
-              style="background-image: url('https://public.readdy.ai/gen_page/map_placeholder_1280x720.png'); background-position: center; background-size: cover;"
-            ></div>
-            <div
-              class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"
-            ></div>
-            <div
-              class="absolute bottom-8 left-8 bg-primary/90 p-4 rounded-lg border border-secondary/30 max-w-sm"
-            >
-              <h3 class="text-lg font-semibold text-white mb-2">
-                AI Company Headquarters
-              </h3>
-              <p class="text-gray-300 text-sm mb-2">
-                100 Innovation Drive, San Francisco, CA 94103
-              </p>
-              <button
-                class="bg-secondary/20 text-secondary py-2 px-4 rounded-button text-sm flex items-center space-x-2 hover:bg-secondary/30 transition-colors whitespace-nowrap"
-              >
-                <i class="ri-direction-line"></i>
-                <span>Get Directions</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
+      
       <!-- FAQ Section -->
       <section class="py-16 bg-primary">
         <div class="container mx-auto px-6">
@@ -500,279 +457,121 @@
         </div>
       </section>
 
-      <!-- Business Hours Section -->
-      <section class="py-16 bg-[#111]">
-        <div class="container mx-auto px-6">
-          <div
-            class="max-w-4xl mx-auto bg-primary/70 rounded-lg p-8 border border-gray-800"
-          >
-            <div
-              class="flex flex-col md:flex-row items-center justify-between mb-8"
-            >
-              <div>
-                <h2 class="text-2xl font-bold text-white mb-2">
-                  Business Hours
-                </h2>
-                <p class="text-gray-400">When you can reach our team</p>
-              </div>
-              <div class="mt-4 md:mt-0">
-                <div class="flex items-center space-x-2 text-sm">
-                  <span class="w-3 h-3 rounded-full bg-green-500"></span>
-                  <span class="text-gray-300">Currently Open</span>
-                </div>
-              </div>
-            </div>
+      
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 class="text-lg font-medium text-white mb-4">
-                  Support Hours
-                </h3>
-                <ul class="space-y-4">
-                  <li class="flex justify-between">
-                    <span class="text-gray-400">Monday - Friday</span>
-                    <span class="text-white">8:00 AM - 5:00 PM PT</span>
-                  </li>
-                  <li class="flex justify-between">
-                    <span class="text-gray-400">Saturday</span>
-                    <span class="text-white">10:00 AM - 2:00 PM PT</span>
-                  </li>
-                  <li class="flex justify-between">
-                    <span class="text-gray-400">Sunday</span>
-                    <span class="text-white">Closed</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 class="text-lg font-medium text-white mb-4">Sales Hours</h3>
-                <ul class="space-y-4">
-                  <li class="flex justify-between">
-                    <span class="text-gray-400">Monday - Friday</span>
-                    <span class="text-white">9:00 AM - 6:00 PM PT</span>
-                  </li>
-                  <li class="flex justify-between">
-                    <span class="text-gray-400">Saturday - Sunday</span>
-                    <span class="text-white">Closed</span>
-                  </li>
-                </ul>
-                <div class="mt-6 pt-6 border-t border-gray-800">
-                  <p class="text-gray-400 text-sm">
-                    For urgent matters outside business hours, please email
-                    <a
-                      href="mailto:urgent@aicompany.com"
-                      class="text-secondary hover:underline"
-                      >urgent@aicompany.com</a
-                    >
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Newsletter Section -->
-      <section class="py-16 bg-primary relative overflow-hidden">
-        <div class="absolute inset-0 opacity-10">
-          <div id="newsletter-particles"></div>
-        </div>
-        <div class="container mx-auto px-6 relative z-10">
-          <div class="max-w-3xl mx-auto text-center">
-            <h2 class="text-3xl font-bold text-white mb-4">Stay Updated</h2>
-            <p class="text-gray-400 mb-8">
-              Subscribe to our newsletter to receive the latest news and updates
-              about our AI solutions.
-            </p>
-
-            <form class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-              <div class="flex-grow relative">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  class="w-full bg-[#111] border border-gray-700 rounded-button py-3 px-4 text-white focus:outline-none focus:border-secondary"
-                />
-              </div>
-              <button
-                type="submit"
-                class="bg-secondary hover:bg-secondary/90 text-white py-3 px-6 rounded-button font-medium transition-all whitespace-nowrap"
-              >
-                Subscribe
-              </button>
-            </form>
-
-            <p class="text-gray-500 text-sm mt-4">
-              We respect your privacy. Unsubscribe at any time.
-            </p>
-          </div>
-        </div>
-      </section>
+          <div id="newsletter-particles" style='height: 0px; width: 0px;'></div>
+        
     </main>
 
-    <footer class="bg-[#0a0a0a] py-12 border-t border-gray-800">
-      <div class="container mx-auto px-6">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-          <div>
-            <a
-              href="#"
-              class="text-2xl font-['Pacifico'] text-white mb-4 inline-block"
-              >logo</a
-            >
-            <p class="text-gray-400 mb-6">
-              Pioneering AI solutions for businesses and individuals. Transform
-              the way you work with our cutting-edge technology.
-            </p>
-            <div class="flex space-x-4">
-              <a
-                href="#"
-                class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-secondary/20 hover:text-secondary transition-colors"
-              >
-                <i class="ri-twitter-x-line"></i>
-              </a>
-              <a
-                href="#"
-                class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-secondary/20 hover:text-secondary transition-colors"
-              >
-                <i class="ri-linkedin-line"></i>
-              </a>
-              <a
-                href="#"
-                class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-secondary/20 hover:text-secondary transition-colors"
-              >
-                <i class="ri-facebook-line"></i>
-              </a>
-              <a
-                href="#"
-                class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-secondary/20 hover:text-secondary transition-colors"
-              >
-                <i class="ri-instagram-line"></i>
-              </a>
-            </div>
-          </div>
-
-          <div>
-            <h3 class="text-lg font-semibold text-white mb-4">Company</h3>
-            <ul class="space-y-2">
-              <li>
-                <a
-                  href="#"
-                  class="text-gray-400 hover:text-secondary transition-colors"
-                  >About Us</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="text-gray-400 hover:text-secondary transition-colors"
-                  >Careers</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="text-gray-400 hover:text-secondary transition-colors"
-                  >Blog</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="text-gray-400 hover:text-secondary transition-colors"
-                  >Press</a
-                >
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 class="text-lg font-semibold text-white mb-4">Resources</h3>
-            <ul class="space-y-2">
-              <li>
-                <a
-                  href="#"
-                  class="text-gray-400 hover:text-secondary transition-colors"
-                  >Documentation</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="text-gray-400 hover:text-secondary transition-colors"
-                  >Help Center</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="text-gray-400 hover:text-secondary transition-colors"
-                  >Community</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="text-gray-400 hover:text-secondary transition-colors"
-                  >Partners</a
-                >
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 class="text-lg font-semibold text-white mb-4">Legal</h3>
-            <ul class="space-y-2">
-              <li>
-                <a
-                  href="#"
-                  class="text-gray-400 hover:text-secondary transition-colors"
-                  >Privacy Policy</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="text-gray-400 hover:text-secondary transition-colors"
-                  >Terms of Service</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="text-gray-400 hover:text-secondary transition-colors"
-                  >Cookie Policy</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="text-gray-400 hover:text-secondary transition-colors"
-                  >GDPR</a
-                >
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div
-          class="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center"
-        >
-          <p class="text-gray-500 text-sm mb-4 md:mb-0">
-            © 2025 AI Company. All rights reserved.
-          </p>
-          <div class="flex items-center space-x-4">
-            <div class="flex items-center text-gray-500">
-              <i class="ri-visa-line ri-lg mr-2"></i>
-              <i class="ri-mastercard-line ri-lg mr-2"></i>
-              <i class="ri-paypal-line ri-lg mr-2"></i>
-              <i class="ri-apple-line ri-lg"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </footer>
+    {% include "Footer.html" %}
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
+        // AI Animation code...
+
+        // Updated Contact Form Handling
+        const contactForm = document.getElementById("contact-form");
+        if (contactForm) {
+          contactForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const submitButton = contactForm.querySelector('button[type="submit"]');
+            const formContainer = contactForm.closest('.w-full.max-w-md');
+            
+            // Show loading state
+            submitButton.innerHTML = '<i class="ri-loader-4-line animate-spin"></i> <span>Sending...</span>';
+            
+            try {
+              // Get form data
+              const formData = new FormData(contactForm);
+              
+              // Send data to your Django backend
+              const response = await fetch(contactForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                  'X-CSRFToken': getCsrfToken(),
+                }
+              });
+              
+              if (response.ok) {
+                // Hide the form
+                contactForm.style.display = 'none';
+                
+                // Create and show success message
+                const successMessage = document.createElement('div');
+                successMessage.className = 'text-center py-8 animate-fade-in';
+                successMessage.innerHTML = `
+                  <div class="w-16 h-16 mx-auto bg-green-500/20 rounded-full flex items-center justify-center mb-4">
+                    <i class="ri-check-line ri-2x text-green-500"></i>
+                  </div>
+                  <h3 class="text-xl font-semibold text-white mb-2">Message Sent Successfully!</h3>
+                  <p class="text-gray-400">Thank you for contacting us. We'll get back to you soon.</p>
+                `;
+                
+                formContainer.appendChild(successMessage);
+                
+                // Reset and show form after 2 seconds
+                setTimeout(() => {
+                  successMessage.remove();
+                  contactForm.style.display = 'block';
+                  contactForm.reset();
+                  submitButton.innerHTML = '<span>Send Message</span> <i class="ri-send-plane-fill"></i>';
+                }, 2000);
+                
+              } else {
+                throw new Error('Form submission failed');
+              }
+            } catch (error) {
+              submitButton.innerHTML = '<span>Error Sending</span> <i class="ri-error-warning-line"></i>';
+              submitButton.classList.add("bg-red-600");
+              
+              // Reset button state after 2 seconds
+              setTimeout(() => {
+                submitButton.innerHTML = '<span>Send Message</span> <i class="ri-send-plane-fill"></i>';
+                submitButton.classList.remove("bg-red-600");
+              }, 2000);
+            }
+          });
+        }
+
+        // Helper function to get CSRF token
+        function getCsrfToken() {
+          return document.querySelector('[name=csrfmiddlewaretoken]').value;
+        }
+
+        // FAQ accordion code...
+        const faqToggles = document.querySelectorAll(".faq-toggle");
+        faqToggles.forEach((toggle) => {
+          toggle.addEventListener("click", function () {
+            const content = this.nextElementSibling;
+            const icon = this.querySelector(".faq-icon");
+
+            // Toggle content
+            content.classList.toggle("active");
+
+            // Toggle icon
+            if (content.classList.contains("active")) {
+              icon.classList.remove("ri-add-line");
+              icon.classList.add("ri-subtract-line");
+            } else {
+              icon.classList.remove("ri-subtract-line");
+              icon.classList.add("ri-add-line");
+            }
+
+            // Close other FAQs
+            faqToggles.forEach((otherToggle) => {
+              if (otherToggle !== toggle) {
+                const otherContent = otherToggle.nextElementSibling;
+                const otherIcon = otherToggle.querySelector(".faq-icon");
+
+                otherContent.classList.remove("active");
+                otherIcon.classList.remove("ri-subtract-line");
+                otherIcon.classList.add("ri-add-line");
+              }
+            });
+          });
+        });
+
         // AI Animation
         const animationContainer = document.getElementById("animation-container");
         const newsletterParticles = document.getElementById("newsletter-particles");
@@ -815,70 +614,8 @@
           line.style.animationDelay = `${Math.random() * 5}s`;
           animationContainer.appendChild(line);
         }
-
-        // Form submission
-        const contactForm = document.getElementById("contact-form");
-        if (contactForm) {
-          contactForm.addEventListener("submit", function (e) {
-            e.preventDefault();
-            const submitButton = contactForm.querySelector('button[type="submit"]');
-
-            // Show loading state
-            submitButton.innerHTML =
-              '<i class="ri-loader-4-line animate-spin"></i> <span>Sending...</span>';
-
-            // Simulate form submission
-            setTimeout(() => {
-              submitButton.innerHTML =
-                '<i class="ri-check-line"></i> <span>Message Sent!</span>';
-              submitButton.classList.add("bg-green-600");
-
-              // Reset form
-              contactForm.reset();
-
-              // Reset button after 3 seconds
-              setTimeout(() => {
-                submitButton.innerHTML =
-                  '<span>Send Message</span> <i class="ri-send-plane-fill"></i>';
-                submitButton.classList.remove("bg-green-600");
-              }, 3000);
-            }, 2000);
-          });
-        }
-
-        // FAQ accordion
-        const faqToggles = document.querySelectorAll(".faq-toggle");
-        faqToggles.forEach((toggle) => {
-          toggle.addEventListener("click", function () {
-            const content = this.nextElementSibling;
-            const icon = this.querySelector(".faq-icon");
-
-            // Toggle content
-            content.classList.toggle("active");
-
-            // Toggle icon
-            if (content.classList.contains("active")) {
-              icon.classList.remove("ri-add-line");
-              icon.classList.add("ri-subtract-line");
-            } else {
-              icon.classList.remove("ri-subtract-line");
-              icon.classList.add("ri-add-line");
-            }
-
-            // Close other FAQs
-            faqToggles.forEach((otherToggle) => {
-              if (otherToggle !== toggle) {
-                const otherContent = otherToggle.nextElementSibling;
-                const otherIcon = otherToggle.querySelector(".faq-icon");
-
-                otherContent.classList.remove("active");
-                otherIcon.classList.remove("ri-subtract-line");
-                otherIcon.classList.add("ri-add-line");
-              }
-            });
-          });
-        });
       });
     </script>
+    
   </body>
 </html>

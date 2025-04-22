@@ -1,7 +1,7 @@
 {% extends 'index.html' %}
 
 {% block content %}
-<div class="delete-confirmation" style="max-width: 500px; margin: 2rem auto; padding: 2rem; background: #f8f9fa; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+<div class="delete-confirmation" style="max-width: 500px; margin: 2rem auto; margin-top:5rem; padding: 2rem; background: #f8f9fa; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
     <h2 style="color: #dc3545; margin-bottom: 1.5rem;">Delete Account</h2>
     <p style="margin-bottom: 2rem;">Are you sure you want to permanently delete your account? This action cannot be undone.</p>
     <form method="POST" action="{% url 'Profile:delete_account' %}" style="display: flex; gap: 1rem;">

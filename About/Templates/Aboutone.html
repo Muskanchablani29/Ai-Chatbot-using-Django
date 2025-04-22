@@ -1,105 +1,519 @@
 {% load static %}
+{% include "index.html" %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>About Us - AI Chatbot</title>
-  <style>
-
-    .about-intro {
-      margin-top: 80px; 
-      height: 70vh; /* Reduced height */
-      width: 100%; /* Full viewport width */
-      background-image: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(255, 255, 255, 0.1)),
-                        url('{% static 'images/Aboutone.png' %}');
-      background-size: cover;
-      background-position: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      text-align: center;
-      position: relative;
-      box-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
-    }
-
-    .about-intro h1 {
-      font-size: 3.5rem;
-      margin-bottom: 30px;
-      background: linear-gradient(90deg, #ffffff, #f8f8f8, #ffffff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: glow 2s infinite alternate, slideIn 1s ease-out;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-
-    .about-intro p {
-      max-width: 700px;
-      font-size: 1.2rem;
-      line-height: 1.8;
-      color: #ffffff;
-      opacity: 0;
-      animation: fadeIn 1s ease-out forwards;
-      animation-delay: 0.5s;
-      padding: 0 20px;
-      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
-      margin: 0 auto 20px;
-    }
-
-    @keyframes glow {
-      from {
-        text-shadow: 0 0 15px rgba(255, 255, 255, 0.6),
-                     0 0 25px rgba(255, 255, 255, 0.4);
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About Us | AI Technology</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { primary: "#181717", secondary: "#2A2A2A" },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <style>
+      :where([class^="ri-"])::before { content: "\f3c2"; }
+      body {
+          font-family: 'Inter', sans-serif;
+          background-color: #0F0F0F;
+          color: #E0E0E0;
       }
-      to {
-        text-shadow: 0 0 25px rgba(255, 255, 255, 0.9),
-                     0 0 45px rgba(255, 255, 255, 0.6);
+      .gradient-text {
+          background: linear-gradient(90deg, #57B5E7, #8DD3C7);
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
       }
-    }
+      .gradient-border {
+          position: relative;
+          border-radius: 8px;
+          background: linear-gradient(to right, #57B5E7, #8DD3C7);
+          padding: 1px;
+      }
+      .gradient-border-content {
+          border-radius: 7px;
+          background: #1A1A1A;
+      }
+      .timeline-item::before {
+          content: '';
+          position: absolute;
+          left: -25px;
+          top: 0;
+          width: 2px;
+          height: 100%;
+          background: linear-gradient(to bottom, #57B5E7, #8DD3C7);
+      }
+      .timeline-item::after {
+          content: '';
+          position: absolute;
+          left: -29px;
+          top: 20px;
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background: #57B5E7;
+      }
+      input:focus, textarea:focus {
+          outline: none;
+          border-color: #57B5E7;
+      }
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+      }
+      .particle-canvas {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 0;
+      }
 
-    @keyframes slideIn {
-      from {
-        transform: translateY(-30px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
+      {% comment %} form............................. {% endcomment %}
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Added responsive design */
-    @media (max-width: 768px) {
-      .about-intro h1 {
-        font-size: 2.5rem;
+      
+      *,
+      *:after,
+      *:before {
+        box-sizing: border-box;
       }
       
-      .about-intro p {
-        font-size: 1rem;
-        max-width: 90%;
+      .light-form {
+        max-width: 1500px;
+        width: 100%;
+        background-color: #0F0F0F;
+        padding: 0 20px;
+        
       }
+      
+      .light-form__title {
+        font-weight: bold;
+        color: #57B5E7;
+        padding: 20px 0;
+        text-transform: uppercase;
+        font-size: 26px;
+        text-shadow: 2px 2px 2px #000;
+        letter-spacing: 3px;
+        border-color: #57B5E7;
+      }
+      
+      .light-form__wrap {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        position: relative;
+      }
+      
+      .light-form__wrap--center {
+        text-align: center;
+        margin-top: 20px;
+        padding-bottom: 20px;
+      }
+      
+      .light-form__group {
+        position: relative;
+        width: 100%;
+        margin-bottom: 20px;
+      }
+      
+      .light-form__label {
+        position: absolute;
+        color: #fff;
+        font-size: 16px;
+        top: 0;
+        left: 10px;
+        transform: translate(0, 50%);
+        transition: transform 0.4s, font-size 0.4s;
+      }
+      
+      .light-form__label--active {
+        transform: translate(0, -100%);
+        font-size: 14px;
+      }
+      
+      .light-form__control {
+        width: 100;
+        padding: 30px;
+        border: 0;
+        border-bottom: 1px solid #fff;
+        background: transparent;
+        font-family: inherit;
+        font-size: inherit;
+        color: #fff;
+        position: relative;
+        z-index: 10;
+        transition: border-color 0.6s;
+      }
+      
+      .light-form__control:focus {
+        outline: none;
+        border-bottom: 1px solid yellow;
+      }
+      
+      .light-form__control:focus + .light-form__label {
+        transform: translate(0, -100%);
+        font-size: 14px;
+      }
+      
+      .light-form__control--active {
+        outline: none;
+        border-bottom: 1px solid yellow;
+      }
+      
+      .light-form__control--error {
+        outline: none;
+        border-bottom: 1px solid red;
+      }
+      
+      .light-form__control--text {
+      }
+      
+      .light-form__control--textarea {
+        width: 100%;
+        height: 120px;
+        resize: none;
+      }
+      
+      .light-form__btn {
+        border: 1px solid #fff;
+        background: #57B5E7;
+        color: black;
+        padding: 10px 60px;
+        cursor: pointer;
+        font-size: inherit;
+        font-family: inherit;
+        outline: none;
+        transition: color 0.4s, background 0.4s;
+      }
+      
+      .light-form__btn:hover {
+        background: yellow;
+        color: #000;
+      }
+      
+      @media (min-width: 550px) {
+        .light-form__title {
+          font-size: 32px;
+        }
+      
+        .light-form__wrap {
+          margin-bottom: 30px;
+        }
+      
+        .light-form__wrap--center {
+          margin-top: 0;
+        }
+      
+        .light-form__group {
+          width: 48%;
+          margin-bottom: 0;
+        }
+      }
+      
+    </style>
+  </head>
+  <body class="min-h-screen">
+   
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 overflow-hidden">
+      <div
+        class="absolute inset-0 z-0"
+        style="background-image: url('https://readdy.ai/api/search-image?query=abstract%20technology%20background%20with%20blue%20digital%20particles%20and%20network%20connections%2C%20dark%20theme%20with%20glowing%20elements%2C%20futuristic%20AI%20visualization%2C%20clean%20minimalist%20design&width=1920&height=1080&seq=1&orientation=landscape'); background-size: cover; background-position: center; opacity: 0.6;"
+      ></div>
+      <div
+        class="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black opacity-90 z-0"
+      ></div>
+      <canvas id="particleCanvas" class="particle-canvas"></canvas>
+
+      <div class="container mx-auto px-6 relative z-10">
+        <div class="max-w-3xl mx-auto text-center">
+          <h1 class="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+            About Our <span class="gradient-text">AI Technology</span>
+          </h1>
+          <p class="text-xl text-gray-300 mb-10 leading-relaxed">
+            Pioneering the future of artificial intelligence with innovative
+            solutions that transform industries and enhance human potential.
+          </p>
+          <div class="flex justify-center gap-4">
+            
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Mission Section -->
+    <section class="py-20 bg-black">
+      <div class="container mx-auto px-6">
+        <div class="flex flex-col md:flex-row items-center gap-12">
+          <div class="w-full md:w-1/2">
+            <h2 class="text-3xl font-bold mb-6">Our Mission</h2>
+            <p class="text-gray-300 mb-8 leading-relaxed">
+              Our mission is to democratize artificial intelligence and make it
+              accessible to businesses of all sizes. We believe in creating AI
+              solutions that are not only powerful and innovative but also
+              ethical and responsible.
+            </p>
+            <p class="text-gray-300 mb-8 leading-relaxed">
+              We strive to push the boundaries of what's possible with AI while
+              ensuring our technology serves humanity's best interests and
+              addresses real-world challenges.
+            </p>
+
+            <div class="grid grid-cols-2 gap-6 mt-10">
+              <div class="flex flex-col items-center text-center">
+                <div
+                  class="w-16 h-16 flex items-center justify-center bg-primary bg-opacity-20 rounded-full mb-4"
+                >
+                  <i class="ri-code-box-line ri-xl text-primary"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-1">250+</h3>
+                <p class="text-gray-400">AI Models Deployed</p>
+              </div>
+              <div class="flex flex-col items-center text-center">
+                <div
+                  class="w-16 h-16 flex items-center justify-center bg-primary bg-opacity-20 rounded-full mb-4"
+                >
+                  <i class="ri-building-line ri-xl text-primary"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-1">500+</h3>
+                <p class="text-gray-400">Enterprise Clients</p>
+              </div>
+              <div class="flex flex-col items-center text-center">
+                <div
+                  class="w-16 h-16 flex items-center justify-center bg-primary bg-opacity-20 rounded-full mb-4"
+                >
+                  <i class="ri-global-line ri-xl text-primary"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-1">42</h3>
+                <p class="text-gray-400">Countries Served</p>
+              </div>
+              <div class="flex flex-col items-center text-center">
+                <div
+                  class="w-16 h-16 flex items-center justify-center bg-primary bg-opacity-20 rounded-full mb-4"
+                >
+                  <i class="ri-user-smile-line ri-xl text-primary"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-1">10M+</h3>
+                <p class="text-gray-400">End Users</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="w-full md:w-1/2">
+            <div class="rounded-lg overflow-hidden">
+              <img
+                src="https://readdy.ai/api/search-image?query=futuristic%20AI%20research%20lab%20with%20scientists%20working%20on%20advanced%20technology%2C%20dark%20theme%20with%20blue%20glowing%20screens%20and%20holographic%20displays%2C%20clean%20minimalist%20design%2C%20professional%20setting&width=800&height=600&seq=2&orientation=landscape"
+                alt="Our Mission"
+                class="w-full h-auto object-cover rounded-lg"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core Values -->
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Particle animation for hero section
+        const canvas = document.getElementById("particleCanvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        const particleCount = 100;
+
+        class Particle {
+          constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 2 + 0.5;
+            this.speedX = Math.random() * 1 - 0.5;
+            this.speedY = Math.random() * 1 - 0.5;
+            this.color = "#57B5E7";
+            this.alpha = Math.random() * 0.5 + 0.1;
+          }
+
+          update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+
+            if (this.x > canvas.width) this.x = 0;
+            else if (this.x < 0) this.x = canvas.width;
+
+            if (this.y > canvas.height) this.y = 0;
+            else if (this.y < 0) this.y = canvas.height;
+          }
+
+          draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.globalAlpha = this.alpha;
+            ctx.fill();
+          }
+        }
+
+        function init() {
+          for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+          }
+        }
+
+        function animate() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw();
+
+            // Connect particles with lines
+            for (let j = i; j < particles.length; j++) {
+              const dx = particles[i].x - particles[j].x;
+              const dy = particles[i].y - particles[j].y;
+              const distance = Math.sqrt(dx * dx + dy * dy);
+
+              if (distance < 100) {
+                ctx.beginPath();
+                ctx.strokeStyle = "#57B5E7";
+                ctx.globalAlpha = 0.1 * (1 - distance / 100);
+                ctx.lineWidth = 0.5;
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.stroke();
+              }
+            }
+          }
+
+          requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+
+        window.addEventListener("resize", function () {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        });
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Scroll animation for timeline items
+        const timelineItems = document.querySelectorAll(".timeline-item");
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.style.opacity = 1;
+                entry.target.style.transform = "translateY(0)";
+              }
+            });
+          },
+          { threshold: 0.1 },
+        );
+
+        timelineItems.forEach((item) => {
+          item.style.opacity = 0;
+          item.style.transform = "translateY(20px)";
+          item.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+          observer.observe(item);
+        });
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+          anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            const targetId = this.getAttribute("href");
+            if (targetId === "#") return;
+
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+              window.scrollTo({
+                top: targetElement.offsetTop - 100,
+                behavior: "smooth",
+              });
+            }
+          });
+        });
+      });
+
+      {% comment %} form..................... {% endcomment %}
+
+      var form = document.querySelector('.light-form');
+var btn = document.querySelector('.light-form__btn');
+var requiredInputs = Array.prototype.slice.call(form.querySelectorAll('.light-form__control[required]'));
+
+form.addEventListener('input', function(e) {
+  var thisInput = e.target;
+  var parent = thisInput.nextElementSibling;
+  
+  if(thisInput.value.trim() !== '') {
+    thisInput.classList.add('light-form__control--active');
+    parent.classList.add('light-form__label--active');
+  }
+  else {
+    thisInput.classList.remove('light-form__control--active');
+    parent.classList.remove('light-form__label--active');
+  }
+});
+
+btn.addEventListener('click', function(e) {
+    
+  requiredInputs.forEach(function(ear){    
+    if(ear.value.trim() === '') {
+      e.preventDefault();
+      ear.classList.add('light-form__control--error');
     }
-  </style>
-</head>
-<body>
+    else {
+      ear.classList.remove('light-form__control--error');
+    }
+  })
+});
 
-  <div class="about-intro">
-    <h1>About Us</h1>
-    <p>Empowering the future through innovative AI solutions. We specialize in creating intelligent chatbot experiences that transform the way you interact with technology.</p>
-  </div>
-
-</body>
+    </script>
+  </body>
 </html>
+
+

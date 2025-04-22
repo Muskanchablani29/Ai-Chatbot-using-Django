@@ -13,7 +13,9 @@ def Profile(request):
 
 def signup(request):
     if request.method == "POST":
-        form = SignUpForm(request.POST)
+        post_data = request.POST.copy()
+        post_data['name'] = request.POST.get('name', '')
+        form = SignUpForm(post_data)
         if form.is_valid():
             user = form.save()
             login(request, user)
@@ -21,8 +23,10 @@ def signup(request):
             return redirect("Home:Home")
         else:
             messages.error(request, "Please correct the errors below")
+    else:
+        form = SignUpForm()
     return render(request, 'Profile.html', {
-        "signup_form": form if request.method == "POST" else SignUpForm(),
+        "signup_form": form,
         "login_form": LoginForm(),
     })
 
@@ -33,12 +37,14 @@ def user_login(request):
             user = form.get_user()
             login(request, user)
             messages.success(request, f"Welcome back, {user.username}!")
-            return redirect("Home:Home")  # Changed to use proper URL namespace
+            return redirect("Home:Home")
         else:
-            messages.error(request, "Invalid username or password")
+            messages.error(request, "Invalid email or password")
+    else:
+        form = LoginForm()
     return render(request, 'Profile.html', {
         "signup_form": SignUpForm(),
-        "login_form": form if request.method == "POST" else LoginForm(),
+        "login_form": form,
     })
 
 @login_required
