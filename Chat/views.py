@@ -7,10 +7,10 @@ import json
 import google.generativeai as genai
 
 # ✅ Configure Gemini API Key
-genai.configure(api_key="AIzaSyBFuikHl1HHID9r2hzqCsr7yht1xa67J5I")  
+genai.configure(api_key="AIzaSyDSbisde1SZQEinxeEdwkTbCM99IRDsoe8")
 
 # Initialize the model
-model = genai.GenerativeModel("models/gemini-1.5-pro")
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 def get_or_create_session(request):
     if not request.session.session_key:

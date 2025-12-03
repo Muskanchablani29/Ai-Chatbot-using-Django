@@ -2,17 +2,28 @@ import google.generativeai as genai
 
 def test_gemini_api():
     # Configure your API key here if not already configured globally
-    genai.configure(api_key="AIzaSyBFuikHl1HHID9r2hzqCsr7yht1xa67J5I")
-    model = genai.GenerativeModel("models/gemini-1.5-pro")
+    genai.configure(api_key="AIzaSyDSbisde1SZQEinxeEdwkTbCM99IRDsoe8")
 
-    prompt = "Write a Python function to add two numbers."
-
+    # List available models
     try:
+        models = genai.list_models()
+        print("Available models:")
+        for model in models:
+            if 'generateContent' in model.supported_generation_methods:
+                print(f"- {model.name}")
+    except Exception as e:
+        print("Error listing models:")
+        print(e)
+
+    # Test with a known working model
+    try:
+        model = genai.GenerativeModel("gemini-2.0-flash")
+        prompt = "Write a Python function to add two numbers."
         response = model.generate_content(prompt)
-        print("API call successful. Generated content:")
+        print("API call successful with gemini-2.0-flash. Generated content:")
         print(response.text)
     except Exception as e:
-        print("API call failed with error:")
+        print("API call failed with gemini-2.0-flash:")
         print(e)
 
 if __name__ == "__main__":
